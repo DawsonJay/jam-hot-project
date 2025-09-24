@@ -48,6 +48,7 @@ CREATE TABLE profiles (
     jam_uses JSONB,
     season VARCHAR(50),
     storage_tips TEXT,
+    preparation TEXT,
     nutrition JSONB,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -61,6 +62,7 @@ CREATE TABLE profiles (
 - `jam_uses` - JSON: ["jam", "preserves", "compote"]
 - `season` - Peak season (e.g., "Summer")
 - `storage_tips` - Storage and handling advice
+- `preparation` - Preparation tips (e.g., "Wash and hull strawberries")
 - `nutrition` - JSON: {"calories": 32, "vitamin_c": "58mg"}
 
 **Coverage Logic**: If a fruit has an entry in profiles table, it's "covered"

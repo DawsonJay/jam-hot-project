@@ -24,6 +24,7 @@ CREATE TABLE profiles (
     jam_uses JSONB,
     season VARCHAR(50),
     storage_tips TEXT,
+    preparation TEXT,
     nutrition JSONB,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -91,12 +92,13 @@ INSERT INTO fruits (fruit_name, ai_identifier) VALUES
 ('grape', 'grape');
 
 -- Insert sample profile for strawberry
-INSERT INTO profiles (fruit_id, scientific_name, description, flavor_profile, jam_uses, season, storage_tips, nutrition) VALUES 
+INSERT INTO profiles (fruit_id, scientific_name, description, flavor_profile, jam_uses, season, storage_tips, preparation, nutrition) VALUES 
 (1, 'Fragaria × ananassa', 'Sweet, juicy berries perfect for jams and preserves', 
  '{"sweet": 8, "tart": 6, "acidic": 4, "floral": 3}',
  '["jam", "preserves", "compote", "syrup"]',
  'Summer',
  'Store in refrigerator for up to 5 days. Freeze for longer storage.',
+ 'Wash gently and remove the green hulls. Cut large berries in half for even cooking.',
  '{"calories": 32, "vitamin_c": "58mg", "fiber": "2g", "sugar": "4.9g"}');
 
 -- Insert sample recipe
