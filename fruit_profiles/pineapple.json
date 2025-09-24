@@ -1,0 +1,26 @@
+{
+  "fruit_id": 20,
+  "scientific_name": "Ananas comosus",
+  "description": "Pineapples are tropical fruits with a tough, spiky exterior and sweet, tangy flesh. They have a distinctive cylindrical shape with a crown of spiky leaves and are known for their high vitamin C content and unique flavor.",
+  "country_of_origin": "South America",
+  "flavor_profile": {
+    "sweet": 7,
+    "tart": 6,
+    "acidic": 6,
+    "floral": 2,
+    "earthy": 1,
+    "notes": "Sweet and tangy with tropical flavor"
+  },
+  "season": "Year-round in most regions",
+  "storage_tips": "Store whole pineapples at room temperature for up to 2 days or refrigerate for up to 5 days. Once cut, store in the refrigerator for up to 3 days. For longer storage, cut and freeze.",
+  "preparation": "Cut off the crown and base, then slice off the skin. Remove the core and slice or dice the flesh. For jams, cut the flesh into small pieces. The tangy flavor makes excellent jams when combined with sugar.",
+  "jam_properties": {
+    "sugar_content": 9.9,
+    "pectin_content": 20,
+    "acidity": 3.3,
+    "water_content": 86.0,
+    "fiber": 1.4
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

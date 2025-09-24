@@ -1,0 +1,26 @@
+{
+  "fruit_id": 28,
+  "scientific_name": "Rheum rhabarbarum",
+  "description": "Rhubarb is a perennial plant with thick, celery-like stalks that are red, pink, or green. The stalks are tart and are used in cooking and baking, while the leaves are toxic and should never be consumed. It has a distinctive tart flavor.",
+  "country_of_origin": "Asia",
+  "flavor_profile": {
+    "sweet": 1,
+    "tart": 10,
+    "acidic": 9,
+    "floral": 1,
+    "earthy": 3,
+    "notes": "Very tart and acidic, requires sweetening"
+  },
+  "season": "Spring to early summer (April-June in most regions)",
+  "storage_tips": "Store fresh rhubarb in the refrigerator for up to 1 week. Wrap in damp paper towels to maintain moisture. For longer storage, cut into pieces and freeze. The stalks can be stored for extended periods when properly handled.",
+  "preparation": "Wash thoroughly and remove any leaves (which are toxic). Cut off the ends and slice the stalks. For jams, cut into small pieces and cook until soft. The extreme tartness makes them excellent for jams when combined with significant amounts of sugar and other fruits.",
+  "jam_properties": {
+    "sugar_content": 1.1,
+    "pectin_content": 30,
+    "acidity": 2.8,
+    "water_content": 93.6,
+    "fiber": 1.8
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

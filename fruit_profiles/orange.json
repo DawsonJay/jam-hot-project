@@ -1,0 +1,26 @@
+{
+  "fruit_id": 15,
+  "scientific_name": "Citrus × sinensis",
+  "description": "Oranges are round citrus fruits with a thick, orange-colored rind and sweet, juicy flesh divided into segments. They are one of the most popular citrus fruits worldwide and are known for their high vitamin C content.",
+  "country_of_origin": "China",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 4,
+    "acidic": 5,
+    "floral": 3,
+    "earthy": 1,
+    "notes": "Sweet and tangy with bright citrus flavor"
+  },
+  "season": "Winter to early spring (December-March in most regions)",
+  "storage_tips": "Store at room temperature for up to 1 week or refrigerate for up to 2 weeks. Keep in a cool, dry place away from direct sunlight. Oranges can be stored for extended periods when properly handled.",
+  "preparation": "Wash the rind before using. Can be peeled and eaten fresh, juiced, or zested for flavoring. For jams, use the juice and zest. The high pectin content in the pith makes excellent jams.",
+  "jam_properties": {
+    "sugar_content": 9.4,
+    "pectin_content": 50,
+    "acidity": 3.1,
+    "water_content": 86.8,
+    "fiber": 2.4
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

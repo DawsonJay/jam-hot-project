@@ -1,0 +1,26 @@
+{
+  "fruit_id": 22,
+  "scientific_name": "Hylocereus undatus",
+  "description": "Dragon fruit, also known as pitaya, is a tropical fruit with a bright pink or yellow rind and white or red flesh dotted with small black seeds. It has a mild, sweet flavor and is known for its striking appearance and high water content.",
+  "country_of_origin": "Central America",
+  "flavor_profile": {
+    "sweet": 6,
+    "tart": 2,
+    "acidic": 3,
+    "floral": 2,
+    "earthy": 1,
+    "notes": "Mild and sweet with subtle flavor"
+  },
+  "season": "Year-round in most regions",
+  "storage_tips": "Store at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 5 days. Handle gently as they bruise easily. The flesh can be frozen for longer storage.",
+  "preparation": "Cut the fruit in half and scoop out the flesh. The seeds are edible and add texture. For jams, use the flesh and seeds. The mild flavor makes excellent jams when combined with other fruits or significant amounts of sugar.",
+  "jam_properties": {
+    "sugar_content": 7.7,
+    "pectin_content": 10,
+    "acidity": 3.5,
+    "water_content": 87.0,
+    "fiber": 0.9
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

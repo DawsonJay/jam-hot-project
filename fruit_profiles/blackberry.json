@@ -1,0 +1,26 @@
+{
+  "fruit_id": 5,
+  "scientific_name": "Rubus fruticosus",
+  "description": "Blackberries are aggregate fruits similar to raspberries but with a solid core. They have a deep purple-black color and a sweet-tart flavor that becomes sweeter as they ripen.",
+  "country_of_origin": "Europe and North America",
+  "flavor_profile": {
+    "sweet": 6,
+    "tart": 7,
+    "acidic": 5,
+    "floral": 3,
+    "earthy": 3,
+    "notes": "Sweet-tart flavor with earthy undertones"
+  },
+  "season": "Late summer to early fall (July-September in most regions)",
+  "storage_tips": "Store unwashed in the refrigerator for 3-5 days. Handle gently to avoid crushing. For longer storage, freeze on a baking sheet, then transfer to freezer bags. Frozen blackberries work well for jams.",
+  "preparation": "Wash gently just before using. Remove any stems or leaves. For jams, can be used whole or lightly crushed. The solid core makes them more robust than raspberries.",
+  "jam_properties": {
+    "sugar_content": 4.9,
+    "pectin_content": 30,
+    "acidity": 3.3,
+    "water_content": 88.2,
+    "fiber": 5.3
+  },
+  "image_url": "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c",
+  "created_date": "2025-09-24T09:29:00Z"
+}

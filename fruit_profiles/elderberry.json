@@ -1,0 +1,26 @@
+{
+  "fruit_id": 6,
+  "scientific_name": "Sambucus nigra",
+  "description": "Elderberries are small, dark purple-black berries that grow in clusters on elder trees. They have a tart, slightly bitter flavor and are commonly used in traditional medicine and culinary applications.",
+  "country_of_origin": "Europe",
+  "flavor_profile": {
+    "sweet": 3,
+    "tart": 9,
+    "acidic": 8,
+    "floral": 2,
+    "earthy": 4,
+    "notes": "Tart and slightly bitter with earthy undertones"
+  },
+  "season": "Late summer to early fall (August-September in most regions)",
+  "storage_tips": "Store fresh elderberries in the refrigerator for 2-3 days. For longer storage, freeze on a baking sheet, then transfer to freezer bags. Elderberries are excellent for jams and syrups when cooked.",
+  "preparation": "Wash thoroughly and remove stems. Elderberries should always be cooked before consumption as raw berries can cause stomach upset. For jams, cook until soft and strain if desired for smoother texture.",
+  "jam_properties": {
+    "sugar_content": 7.4,
+    "pectin_content": 20,
+    "acidity": 2.8,
+    "water_content": 79.8,
+    "fiber": 7.0
+  },
+  "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96",
+  "created_date": "2025-09-24T09:29:00Z"
+}

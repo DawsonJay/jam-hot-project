@@ -1,0 +1,26 @@
+{
+  "fruit_id": 27,
+  "scientific_name": "Ficus carica",
+  "description": "Figs are small, pear-shaped fruits with a thin, purple or green skin and sweet, soft flesh filled with tiny edible seeds. They have a distinctive sweet flavor and are often dried for preservation. The flesh is soft and can be eaten whole.",
+  "country_of_origin": "Middle East",
+  "flavor_profile": {
+    "sweet": 9,
+    "tart": 2,
+    "acidic": 3,
+    "floral": 3,
+    "earthy": 2,
+    "notes": "Very sweet with distinctive flavor"
+  },
+  "season": "Summer to early fall (July-September in most regions)",
+  "storage_tips": "Store fresh figs in the refrigerator for up to 3 days. Handle gently as they are very delicate and bruise easily. For longer storage, dry or freeze. The soft texture makes them ideal for jams.",
+  "preparation": "Wash gently and remove the stem. Can be eaten whole, including the skin. For jams, can be used whole or halved. The soft texture and high sugar content make excellent smooth jams with minimal added sugar.",
+  "jam_properties": {
+    "sugar_content": 16.3,
+    "pectin_content": 25,
+    "acidity": 3.4,
+    "water_content": 79.1,
+    "fiber": 2.9
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

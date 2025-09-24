@@ -1,0 +1,26 @@
+{
+  "fruit_id": 17,
+  "scientific_name": "Citrus × aurantiifolia",
+  "description": "Limes are small, round citrus fruits with a thin, green rind and very tart, acidic juice. They are smaller than lemons and have a more intense, floral flavor. Key limes are particularly prized for their distinctive flavor.",
+  "country_of_origin": "Asia",
+  "flavor_profile": {
+    "sweet": 1,
+    "tart": 10,
+    "acidic": 10,
+    "floral": 4,
+    "earthy": 1,
+    "notes": "Very tart and acidic with floral undertones"
+  },
+  "season": "Year-round in most regions",
+  "storage_tips": "Store at room temperature for up to 1 week or refrigerate for up to 2 weeks. Limes can be juiced and frozen for longer storage. The juice can be frozen in ice cube trays for convenient use.",
+  "preparation": "Wash the rind before using. Can be juiced, zested, or sliced. For jams, use the juice and zest for flavoring and acidity. Limes are rarely made into jam alone due to extreme tartness, but are excellent for adding acidity and flavor to other fruit jams.",
+  "jam_properties": {
+    "sugar_content": 1.7,
+    "pectin_content": 60,
+    "acidity": 2.0,
+    "water_content": 88.3,
+    "fiber": 2.8
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

@@ -1,0 +1,26 @@
+{
+  "fruit_id": 2,
+  "scientific_name": "Actinidia deliciosa",
+  "description": "Kiwi, also known as Chinese gooseberry, is a small, oval-shaped fruit with a fuzzy brown skin and vibrant green flesh speckled with tiny black seeds. It belongs to the Actinidiaceae family and is native to China.",
+  "country_of_origin": "China",
+  "flavor_profile": {
+    "sweet": 7,
+    "tart": 8,
+    "acidic": 8,
+    "floral": 2,
+    "earthy": 1,
+    "notes": "Sweet and tangy flavor with tropical characteristics"
+  },
+  "season": "Fall to early winter (October-December in most regions)",
+  "storage_tips": "Store unripe kiwi at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 2 weeks. Cut kiwi should be consumed within 2-3 days.",
+  "preparation": "Wash the skin thoroughly. Can be eaten with skin (after washing) or peeled. For jams, peel and slice or puree the flesh. Remove any hard core if present.",
+  "jam_properties": {
+    "sugar_content": 8.9,
+    "pectin_content": 15,
+    "acidity": 3.25,
+    "water_content": 83.1,
+    "fiber": 3.0
+  },
+  "image_url": "https://images.unsplash.com/photo-1571772996211-2f02c9727629",
+  "created_date": "2025-09-24T09:29:00Z"
+}

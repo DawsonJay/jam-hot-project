@@ -1,0 +1,26 @@
+{
+  "fruit_id": 21,
+  "scientific_name": "Passiflora edulis",
+  "description": "Passion fruits are small, round fruits with a tough, purple or yellow rind and sweet, tart pulp filled with edible seeds. They have a distinctive tropical flavor and are known for their high fiber content and unique appearance.",
+  "country_of_origin": "South America",
+  "flavor_profile": {
+    "sweet": 6,
+    "tart": 8,
+    "acidic": 7,
+    "floral": 5,
+    "earthy": 2,
+    "notes": "Sweet and tart with tropical floral notes"
+  },
+  "season": "Year-round in most regions",
+  "storage_tips": "Store at room temperature until the rind becomes slightly wrinkled, indicating ripeness. Once ripe, refrigerate for up to 1 week. The pulp can be frozen for longer storage.",
+  "preparation": "Cut the fruit in half and scoop out the pulp and seeds. The seeds are edible and add texture. For jams, use the pulp and seeds. The unique flavor makes excellent jams when combined with sugar.",
+  "jam_properties": {
+    "sugar_content": 11.2,
+    "pectin_content": 25,
+    "acidity": 3.0,
+    "water_content": 72.9,
+    "fiber": 10.4
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

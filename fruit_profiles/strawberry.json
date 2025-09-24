@@ -1,0 +1,26 @@
+{
+  "fruit_id": 1,
+  "scientific_name": "Fragaria × ananassa",
+  "description": "Strawberries are low-growing herbaceous plants belonging to the rose family. They produce white flowers and red, heart-shaped fruits known for their sweet flavor and characteristic aroma. The surface of the fruit is dotted with tiny seeds, each representing an individual achene.",
+  "country_of_origin": "North America",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 6,
+    "acidic": 4,
+    "floral": 3,
+    "earthy": 2,
+    "notes": "Known for sweet flavor and characteristic aroma"
+  },
+  "season": "Late spring to early summer (May-July in most regions)",
+  "storage_tips": "Store unwashed in the refrigerator for up to 5 days. Spread in a single layer to prevent bruising. For longer storage, freeze whole berries on a baking sheet, then transfer to freezer bags. Frozen strawberries work well for jams.",
+  "preparation": "Wash gently under cool water just before using. Remove the green hulls by pinching or using a paring knife. For jams, cut large berries in half to ensure even cooking and better texture. Small berries can be left whole for a chunkier jam.",
+  "jam_properties": {
+    "sugar_content": 4.9,
+    "pectin_content": 30,
+    "acidity": 3.25,
+    "water_content": 91,
+    "fiber": 2.0
+  },
+  "image_url": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6",
+  "created_date": "2025-09-24T09:29:00Z"
+}

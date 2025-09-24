@@ -46,6 +46,7 @@ For detailed technical specifications, see the `docs/` folder:
 - **[AI Model Specification](docs/ai-model-specification.md)** - Transfer learning with fruits-only focus
 - **[Frontend Specification](docs/frontend-specification.md)** - React app with Material-UI
 - **[Railway Deployment](docs/railway-deployment-specification.md)** - PostgreSQL deployment strategy
+- **[Fruit Profile Creation](docs/fruit-profile-creation-specification.md)** - Framework for creating factual fruit profiles
 
 **For AI Assistants**: See [AI-CONTEXT.md](AI-CONTEXT.md) for orientation instructions.
 

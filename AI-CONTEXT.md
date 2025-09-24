@@ -37,6 +37,7 @@ When you first start working on this project, please follow these steps in order
   - `ai-model-specification.md` - Transfer learning with fruits-only focus
   - `frontend-specification.md` - React app with Material-UI
   - `railway-deployment-specification.md` - PostgreSQL deployment strategy
+  - `fruit-profile-creation-specification.md` - Framework for creating factual fruit profiles
 
 ### 6. Read Key Definitions (if needed)
 - **Chat Context**: `/home/james/Documents/portfolio-profile/definitions/chat-context-definition.md`
@@ -55,6 +56,26 @@ When you first start working on this project, please follow these steps in order
 - Follow portfolio-profile project structure when creating files
 - Ask about capture system after important moments
 - Always include chat context when creating records
+
+## CRITICAL: Fruit Profile Creation Rules
+**⚠️ MANDATORY: When creating or updating fruit profiles, you MUST follow the [Fruit Profile Creation Specification](docs/fruit-profile-creation-specification.md) exactly.**
+
+### Strict Requirements:
+1. **ALL nutritional data** must come from USDA FoodData Central
+2. **ALL pectin and acidity data** must be from scientific literature
+3. **ALL images** must be from Unsplash with proper licensing
+4. **NO estimated or guessed values** - everything must be scientifically verified
+5. **ALL descriptions** must be factual, not marketing copy
+6. **ALL sources** must be documented and verifiable
+
+### Quality Assurance:
+- Cross-reference all data with multiple sources
+- Verify scientific names with botanical databases
+- Check image URLs are accessible
+- Ensure all values are within reasonable ranges
+- Complete the quality assurance checklist before finalizing
+
+### Failure to follow these rules will result in inaccurate data and compromise the project's scientific integrity.
 
 ## Portfolio Context
 This project is part of a larger portfolio strategy for Canadian immigration (Express Entry by Jan 2026). The Jam Hot project demonstrates AI/ML skills, full-stack development, and practical problem-solving - all valuable for the portfolio narrative.

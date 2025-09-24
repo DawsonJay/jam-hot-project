@@ -1,0 +1,26 @@
+{
+  "fruit_id": 12,
+  "scientific_name": "Prunus domestica",
+  "description": "Plums are round or oval stone fruits with smooth skin that can be purple, red, yellow, or green. They have sweet, juicy flesh and a single large pit. Different varieties range from very sweet to tart.",
+  "country_of_origin": "Europe and Asia",
+  "flavor_profile": {
+    "sweet": 7,
+    "tart": 4,
+    "acidic": 4,
+    "floral": 3,
+    "earthy": 2,
+    "notes": "Sweet and juicy with subtle tartness"
+  },
+  "season": "Summer to early fall (July-September in most regions)",
+  "storage_tips": "Store unripe plums at room temperature until slightly soft. Once ripe, refrigerate for up to 5 days. Handle gently to avoid bruising. For longer storage, freeze or dry.",
+  "preparation": "Wash gently and remove the pit by cutting around it. Can be used with or without skin. For jams, peel if desired and slice the flesh. The natural sweetness and good pectin content make excellent jams.",
+  "jam_properties": {
+    "sugar_content": 9.9,
+    "pectin_content": 30,
+    "acidity": 3.2,
+    "water_content": 87.2,
+    "fiber": 1.4
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

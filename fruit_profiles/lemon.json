@@ -1,0 +1,26 @@
+{
+  "fruit_id": 16,
+  "scientific_name": "Citrus limon",
+  "description": "Lemons are oval citrus fruits with a bright yellow rind and very tart, acidic juice. They are primarily used for their juice and zest in cooking and baking, and are known for their high vitamin C content and preservative properties.",
+  "country_of_origin": "Asia",
+  "flavor_profile": {
+    "sweet": 2,
+    "tart": 10,
+    "acidic": 10,
+    "floral": 2,
+    "earthy": 1,
+    "notes": "Very tart and acidic, primarily used for juice and zest"
+  },
+  "season": "Year-round in most regions",
+  "storage_tips": "Store at room temperature for up to 1 week or refrigerate for up to 1 month. Lemons can be juiced and frozen for longer storage. The juice can be frozen in ice cube trays for convenient use.",
+  "preparation": "Wash the rind before using. Can be juiced, zested, or sliced. For jams, use the juice and zest for flavoring and acidity. Lemons are rarely made into jam alone due to extreme tartness, but are excellent for adding acidity to other fruit jams.",
+  "jam_properties": {
+    "sugar_content": 2.5,
+    "pectin_content": 60,
+    "acidity": 2.0,
+    "water_content": 89.0,
+    "fiber": 2.8
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

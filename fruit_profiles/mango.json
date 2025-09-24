@@ -1,0 +1,26 @@
+{
+  "fruit_id": 19,
+  "scientific_name": "Mangifera indica",
+  "description": "Mangoes are tropical stone fruits with sweet, creamy flesh and a large, flat pit. They have a distinctive sweet flavor and come in various shapes and sizes, with skin colors ranging from green to yellow to red when ripe.",
+  "country_of_origin": "South Asia",
+  "flavor_profile": {
+    "sweet": 9,
+    "tart": 2,
+    "acidic": 3,
+    "floral": 4,
+    "earthy": 2,
+    "notes": "Sweet and creamy with tropical floral notes"
+  },
+  "season": "Spring to summer (March-July in most regions)",
+  "storage_tips": "Store unripe mangoes at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 5 days. For longer storage, slice and freeze. Handle gently as they bruise easily.",
+  "preparation": "Wash the skin before cutting. Cut around the large, flat pit and slice or dice the flesh. For jams, peel and slice the flesh, discarding the pit. The sweet, creamy texture makes excellent smooth jams.",
+  "jam_properties": {
+    "sugar_content": 13.7,
+    "pectin_content": 15,
+    "acidity": 3.4,
+    "water_content": 83.5,
+    "fiber": 1.6
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

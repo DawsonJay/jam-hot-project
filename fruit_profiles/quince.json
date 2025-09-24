@@ -1,0 +1,26 @@
+{
+  "fruit_id": 26,
+  "scientific_name": "Cydonia oblonga",
+  "description": "Quinces are round or pear-shaped fruits with a golden-yellow skin and hard, astringent flesh. They are rarely eaten raw due to their tartness and hardness, but are excellent for cooking, jams, and preserves. They have a distinctive floral aroma.",
+  "country_of_origin": "Southwest Asia",
+  "flavor_profile": {
+    "sweet": 4,
+    "tart": 8,
+    "acidic": 7,
+    "floral": 6,
+    "earthy": 2,
+    "notes": "Tart and floral with distinctive aroma"
+  },
+  "season": "Fall (September-November in most regions)",
+  "storage_tips": "Store at room temperature for up to 2 weeks or refrigerate for up to 2 months. Quinces can be stored for extended periods when properly handled. The hard texture makes them durable.",
+  "preparation": "Wash thoroughly and remove the core and seeds. The flesh is very hard and astringent when raw, so it must be cooked. For jams, peel and slice the flesh, then cook until soft. The high pectin content makes excellent jams with good gel formation.",
+  "jam_properties": {
+    "sugar_content": 7.0,
+    "pectin_content": 50,
+    "acidity": 3.1,
+    "water_content": 83.8,
+    "fiber": 1.9
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

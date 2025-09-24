@@ -1,0 +1,26 @@
+{
+  "fruit_id": 29,
+  "scientific_name": "Vitis vinifera",
+  "description": "Grapes are small, round fruits that grow in clusters on vines. They come in various colors including green, red, and purple, and can be sweet or tart depending on the variety. They are commonly used for eating fresh, making wine, or drying into raisins.",
+  "country_of_origin": "Near East",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 4,
+    "acidic": 4,
+    "floral": 2,
+    "earthy": 2,
+    "notes": "Sweet with subtle tartness"
+  },
+  "season": "Late summer to early fall (August-October in most regions)",
+  "storage_tips": "Store fresh grapes in the refrigerator for up to 1 week. Keep in a perforated bag to maintain moisture. For longer storage, freeze or dry into raisins. Handle gently as they bruise easily.",
+  "preparation": "Wash thoroughly and remove any stems. Can be eaten whole, including the skin and seeds. For jams, can be used whole or halved. The natural sweetness and good pectin content make excellent jams with good color and flavor.",
+  "jam_properties": {
+    "sugar_content": 15.5,
+    "pectin_content": 30,
+    "acidity": 3.2,
+    "water_content": 81.0,
+    "fiber": 0.9
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

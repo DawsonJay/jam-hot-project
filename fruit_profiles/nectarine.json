@@ -1,0 +1,26 @@
+{
+  "fruit_id": 14,
+  "scientific_name": "Prunus persica var. nucipersica",
+  "description": "Nectarines are smooth-skinned stone fruits that are essentially fuzzless peaches. They have sweet, juicy flesh with a more intense flavor than peaches and come in yellow and white varieties.",
+  "country_of_origin": "China",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 4,
+    "acidic": 4,
+    "floral": 5,
+    "earthy": 2,
+    "notes": "Sweet and floral with more intense flavor than peaches"
+  },
+  "season": "Summer (June-August in most regions)",
+  "storage_tips": "Store unripe nectarines at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 5 days. Handle gently to avoid bruising. For longer storage, slice and freeze.",
+  "preparation": "Wash gently - no need to peel as the skin is smooth and edible. Cut around the pit and slice or dice. For jams, can be used with skin or peeled. The smooth texture and intense flavor make excellent jams.",
+  "jam_properties": {
+    "sugar_content": 8.4,
+    "pectin_content": 20,
+    "acidity": 3.4,
+    "water_content": 89.1,
+    "fiber": 1.5
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

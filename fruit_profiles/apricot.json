@@ -1,0 +1,26 @@
+{
+  "fruit_id": 11,
+  "scientific_name": "Prunus armeniaca",
+  "description": "Apricots are small, golden-orange stone fruits with velvety skin and sweet, slightly tart flesh. They have a distinctive aroma and are often dried for preservation. The pit contains a kernel that is sometimes used in cooking.",
+  "country_of_origin": "China",
+  "flavor_profile": {
+    "sweet": 7,
+    "tart": 5,
+    "acidic": 5,
+    "floral": 4,
+    "earthy": 3,
+    "notes": "Sweet with subtle tartness and distinctive aroma"
+  },
+  "season": "Summer (June-August in most regions)",
+  "storage_tips": "Store unripe apricots at room temperature until slightly soft. Once ripe, refrigerate for up to 5 days. Handle gently as they bruise easily. For longer storage, dry or freeze.",
+  "preparation": "Wash gently and remove the pit by cutting around it. Can be used with or without skin. For jams, peel if desired and slice the flesh. The natural sweetness makes excellent jams with minimal added sugar.",
+  "jam_properties": {
+    "sugar_content": 9.2,
+    "pectin_content": 25,
+    "acidity": 3.3,
+    "water_content": 86.4,
+    "fiber": 2.0
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

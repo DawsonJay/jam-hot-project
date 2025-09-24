@@ -1,0 +1,26 @@
+{
+  "fruit_id": 18,
+  "scientific_name": "Citrus × paradisi",
+  "description": "Grapefruits are large citrus fruits with a thick, yellow or pink rind and segmented flesh that can be white, pink, or red. They have a distinctive bitter-sweet flavor and are known for their high vitamin C content and potential health benefits.",
+  "country_of_origin": "Barbados",
+  "flavor_profile": {
+    "sweet": 6,
+    "tart": 7,
+    "acidic": 6,
+    "floral": 2,
+    "earthy": 1,
+    "notes": "Bitter-sweet with distinctive citrus flavor"
+  },
+  "season": "Winter to early spring (December-April in most regions)",
+  "storage_tips": "Store at room temperature for up to 1 week or refrigerate for up to 2 weeks. Grapefruits can be stored for extended periods when properly handled. The rind helps protect the fruit.",
+  "preparation": "Wash the rind before using. Can be peeled and eaten fresh, juiced, or segmented. For jams, use the juice and zest. The bitter flavor makes them interesting for jams when combined with sweeter fruits or significant amounts of sugar.",
+  "jam_properties": {
+    "sugar_content": 6.9,
+    "pectin_content": 45,
+    "acidity": 3.0,
+    "water_content": 88.1,
+    "fiber": 1.0
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

@@ -1,0 +1,26 @@
+{
+  "fruit_id": 10,
+  "scientific_name": "Prunus persica",
+  "description": "Peaches are soft, fuzzy-skinned stone fruits with sweet, juicy flesh surrounding a large pit. They have a delicate aroma and come in yellow and white varieties, each with distinct flavor profiles.",
+  "country_of_origin": "China",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 3,
+    "acidic": 4,
+    "floral": 5,
+    "earthy": 2,
+    "notes": "Sweet and floral with delicate aroma"
+  },
+  "season": "Summer (June-August in most regions)",
+  "storage_tips": "Store unripe peaches at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 5 days. Handle gently to avoid bruising. For longer storage, slice and freeze.",
+  "preparation": "Wash gently and remove the fuzzy skin if desired. Cut around the pit and slice or dice. For jams, peel and slice the flesh, discarding the pit. The soft texture makes excellent smooth jams.",
+  "jam_properties": {
+    "sugar_content": 8.4,
+    "pectin_content": 20,
+    "acidity": 3.4,
+    "water_content": 89.1,
+    "fiber": 1.5
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

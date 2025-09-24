@@ -1,0 +1,26 @@
+{
+  "fruit_id": 25,
+  "scientific_name": "Pyrus communis",
+  "description": "Pears are bell-shaped fruits with a thin skin that can be green, yellow, or red. They have sweet, juicy flesh that becomes softer as they ripen. The flesh surrounds a core containing small seeds.",
+  "country_of_origin": "Europe and Asia",
+  "flavor_profile": {
+    "sweet": 8,
+    "tart": 3,
+    "acidic": 3,
+    "floral": 4,
+    "earthy": 2,
+    "notes": "Sweet and floral with delicate flavor"
+  },
+  "season": "Late summer to early winter (August-December in most regions)",
+  "storage_tips": "Store unripe pears at room temperature until slightly soft to touch. Once ripe, refrigerate for up to 5 days. Handle gently as they bruise easily. The soft texture makes them ideal for jams.",
+  "preparation": "Wash thoroughly before eating. Can be eaten with or without skin. For jams, peel if desired and slice the flesh, discarding the core. The soft texture and high pectin content make excellent smooth jams.",
+  "jam_properties": {
+    "sugar_content": 9.8,
+    "pectin_content": 35,
+    "acidity": 3.2,
+    "water_content": 83.7,
+    "fiber": 3.1
+  },
+  "image_url": "https://images.unsplash.com/photo-1571771909219-9a6b2b1b5b0b",
+  "created_date": "2025-09-24T09:29:00Z"
+}

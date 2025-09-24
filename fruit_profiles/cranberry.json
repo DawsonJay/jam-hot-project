@@ -1,0 +1,26 @@
+{
+  "fruit_id": 7,
+  "scientific_name": "Vaccinium macrocarpon",
+  "description": "Cranberries are small, round, red berries that grow on low-lying vines in bogs. They have a very tart, astringent flavor and are known for their high antioxidant content and traditional use in sauces and beverages.",
+  "country_of_origin": "North America",
+  "flavor_profile": {
+    "sweet": 2,
+    "tart": 10,
+    "acidic": 9,
+    "floral": 1,
+    "earthy": 2,
+    "notes": "Very tart and astringent, requires sweetening for most uses"
+  },
+  "season": "Fall (September-November in most regions)",
+  "storage_tips": "Store fresh cranberries in the refrigerator for up to 2 months. They can also be frozen for up to a year. Cranberries are excellent for jams when combined with sweeteners and other fruits.",
+  "preparation": "Wash thoroughly and sort, removing any soft or damaged berries. For jams, can be used whole or chopped. Often combined with sweeter fruits or significant amounts of sugar due to their extreme tartness.",
+  "jam_properties": {
+    "sugar_content": 4.0,
+    "pectin_content": 40,
+    "acidity": 2.3,
+    "water_content": 87.1,
+    "fiber": 4.6
+  },
+  "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96",
+  "created_date": "2025-09-24T09:29:00Z"
+}
