@@ -12,17 +12,24 @@ Upload a photo of fruit → Get fruit identification + jam recipes + flavor prof
 
 ## Quick Start
 
-**Start the database:**
+**1. Set up environment variables:**
+```bash
+# Copy the example file and update with your values
+cp .env.example .env
+# Edit .env with your database credentials
+```
+
+**2. Start the database:**
 ```bash
 ./scripts/database/start-db.sh
 ```
 
-**Connect to database:**
+**3. Connect to database:**
 ```bash
 psql -h localhost -p 5433 -U postgres -d jam_hot
 ```
 
-**Stop the database:**
+**4. Stop the database:**
 ```bash
 ./scripts/database/stop-db.sh
 ```

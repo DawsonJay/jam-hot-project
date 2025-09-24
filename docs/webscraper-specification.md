@@ -139,6 +139,16 @@ CREATE TABLE recipe_fruits (
 ```
 
 ## Success Criteria
+
+### Phase 1 Success (Immediate Goal)
+- **Complete pipeline**: One strawberry jam recipe from AllRecipes to database
+- **Data completeness**: All required fields (title, ingredients, instructions, rating, source URL)
+- **Fruit extraction**: Correctly identified "strawberry" as primary fruit
+- **Database integration**: Recipe stored in recipes table, fruit relationship in recipe_fruits table
+- **Data quality**: Properly formatted, validated data
+- **End-to-end validation**: From web scraping to database storage works
+
+### Final Success Criteria (End Goal)
 - **Recipe database**: 200+ jam recipes from multiple sources
 - **Fruit coverage**: Detailed profiles for 50+ primary jam fruits
 - **Scraper framework**: Working adapters for 3+ recipe sites
@@ -157,16 +167,77 @@ CREATE TABLE recipe_fruits (
 - **System architecture**: Separation of concerns, modularity, scalability
 - **Industry patterns**: Real-world approach used by companies
 
+## Development Approach: Test-Driven, End-to-End
+
+### Phase 1: Complete End-to-End for One Recipe (Priority)
+**Goal**: Get ONE strawberry jam recipe from ONE site with complete processing
+
+**Complete Pipeline**:
+1. **Base adapter interface** - Define the framework
+2. **AllRecipes adapter** - Site-specific logic for AllRecipes
+3. **Core scraper** - Orchestrates the entire process
+4. **Data processing pipeline** - Extract, validate, clean, standardize
+5. **Fruit extraction** - Identify fruits in ingredients
+6. **Database integration** - Store in proper format with relationships
+7. **End-to-end test** - Verify complete pipeline works
+
+**Validation Criteria**:
+- Recipe data: Title, ingredients, instructions, rating, source URL
+- Fruit extraction: Correctly identified "strawberry" as primary fruit
+- Database storage: Recipe in recipes table, fruit relationship in recipe_fruits table
+- Data quality: All required fields present, properly formatted
+- Complete flow: From web scraping to database storage
+
+### Phase 2: Expand Core Scraper Robustness
+**Goal**: Make the core scraper production-ready
+
+- Add error handling (site down, network issues)
+- Add rate limiting (0.3 seconds between requests)
+- Add data validation (complete recipe check)
+- Add logging (progress tracking, error reporting)
+- Add retry logic (temporary failures)
+
+### Phase 3: Add More Sites
+**Goal**: Get recipes from multiple sources
+
+- Add Ball Canning adapter (same interface)
+- Add Food.com adapter (same interface)
+- Test multi-site scraping
+- Validate different data formats
+
+### Phase 4: Add More Fruits
+**Goal**: Expand beyond strawberry
+
+- Test with blueberry, apple, other fruits
+- Validate fruit extraction works across different recipes
+- Test multiple fruits per recipe
+
+### Phase 5: Scale and Optimize
+**Goal**: Production-ready scraper
+
+- Add duplicate detection
+- Add batch processing
+- Add resume capability
+- Add performance monitoring
+
 ## Development Timeline
-- **Week 1, Days 1-2**: Analyze target sites and fine-tune database schema
-- **Week 1, Day 3**: Create database and core scraper framework
-- **Week 1, Days 4-5**: Perfect one site, then add others one by one
+- **Week 1, Days 1-2**: Complete end-to-end pipeline for one recipe (Phase 1)
+- **Week 1, Day 3**: Expand core scraper robustness (Phase 2)
+- **Week 1, Days 4-5**: Add more sites and fruits (Phases 3-4)
 
 ## Technical Dependencies
-- **Python packages**: selenium, webdriver-manager, psycopg2, sqlalchemy, logging
+- **Python packages**: selenium, webdriver-manager, psycopg2, sqlalchemy, logging, beautifulsoup4, requests
 - **Browser**: Chrome/Chromium (headless mode)
-- **Database**: PostgreSQL for recipe storage
+- **Database**: PostgreSQL for recipe storage (already set up)
 - **Rate limiting**: 0.3 seconds between requests
-- **Error handling**: Fail completely if any site breaks
+- **Error handling**: Graceful degradation (one site fails, others continue)
 - **Deployment**: Local development only - not deployed
-- **Development approach**: Core framework → one site perfect → scale to others
+- **Development approach**: Test-driven, end-to-end validation for one recipe first
+
+## Key Design Principles
+- **Start simple**: One recipe, one site, complete pipeline
+- **Test-driven**: Validate each component works before adding complexity
+- **End-to-end validation**: From web scraping to database storage
+- **Incremental expansion**: Add sites and features only after core works
+- **Real data**: Work with actual recipe data, not mock data
+- **Complete processing**: Extract, validate, clean, standardize, store
