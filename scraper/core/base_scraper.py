@@ -86,7 +86,7 @@ class BaseScraper:
                 if i < len(recipe_urls) - 1:  # Don't wait after the last request
                     time.sleep(self.rate_limit)
                     
-            except requests.RequestException as e:
+            except Exception as e:
                 print(f"Error scraping recipe {recipe_url}: {e}")
                 continue
         

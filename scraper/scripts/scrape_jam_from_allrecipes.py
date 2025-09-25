@@ -8,6 +8,7 @@ from AllRecipes and inserting them into the database.
 
 import sys
 import os
+import argparse
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 
@@ -19,7 +20,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 
 from scraper.core.base_scraper import BaseScraper
 from scraper.adapters.allrecipes_adapter import AllRecipesAdapter
-from scripts.scraping.insert_recipes import insert_recipes
+from scraper.scripts.insert_recipes import insert_recipes, connect_to_database
 
 def get_timestamp():
     """Get current timestamp for logging."""
@@ -89,35 +90,12 @@ def scrape_jam_from_allrecipes(fruit_name: str, scrape_count: int = 10, insert_c
         
         print(f"[{get_timestamp()}] ✅ Recipe scraping complete! Got {len(all_scraped_recipes)} recipes")
         
-        # Import the duplicate checking function
-        from scripts.scraping.insert_recipes import check_duplicate_recipe, connect_to_database
-        
-        # Connect to database for duplicate checking
-        db_connection = connect_to_database()
-        
-        # Filter out duplicates
-        print(f"[{get_timestamp()}] Checking for duplicates...")
-        non_duplicate_recipes = []
-        duplicate_count = 0
-        
-        for recipe in all_scraped_recipes:
-            if check_duplicate_recipe(db_connection, recipe):
-                print(f"[{get_timestamp()}] ⚠️  Duplicate found: {recipe.get('title', 'Untitled')}")
-                duplicate_count += 1
-            else:
-                non_duplicate_recipes.append(recipe)
-        
-        # Close database connection
-        db_connection.close()
-        
-        print(f"[{get_timestamp()}] Found {duplicate_count} duplicates, {len(non_duplicate_recipes)} unique recipes")
-        
         # Sort by popularity (rating first, then review count as tiebreaker)
         print(f"[{get_timestamp()}] Sorting by popularity (rating first, then review count)...")
-        non_duplicate_recipes.sort(key=lambda r: (r['rating'], r['review_count']), reverse=True)
+        all_scraped_recipes.sort(key=lambda r: (r['rating'], r['review_count']), reverse=True)
         
-        # Take top N recipes
-        scraped_recipes = non_duplicate_recipes[:insert_count]
+        # Take top N recipes (no duplicate checking - let post-processing handle it)
+        scraped_recipes = all_scraped_recipes[:insert_count]
         print(f"[{get_timestamp()}] Selected top {len(scraped_recipes)} most popular recipes for insertion")
         
         # Step 3: Insert recipes into database
@@ -127,6 +105,26 @@ def scrape_jam_from_allrecipes(fruit_name: str, scrape_count: int = 10, insert_c
             return []
         
         recipe_ids = insert_recipes(scraped_recipes)
+        
+        # Step 4: Extract fruits and identify primary fruits
+        print(f"[{get_timestamp()}] Step 4: Extracting fruits and identifying primary fruits...")
+        if recipe_ids:
+            # Import the fruit extraction and primary identification functions
+            from scraper.scripts.extract_fruits import extract_fruits_from_all_recipes
+            from scraper.scripts.identify_primary_fruits import process_recipe
+            
+            # Extract fruits from the newly inserted recipes
+            print(f"[{get_timestamp()}] Extracting fruits from {len(recipe_ids)} new recipes...")
+            extract_fruits_from_all_recipes()
+            
+            # Identify primary fruits for the newly inserted recipes
+            print(f"[{get_timestamp()}] Identifying primary fruits for new recipes...")
+            db_connection = connect_to_database()
+            for recipe_id in recipe_ids:
+                process_recipe(db_connection, recipe_id, dry_run=False, verbose=False)
+            db_connection.close()
+            
+            print(f"[{get_timestamp()}] ✅ Fruit extraction and primary identification complete!")
         
         print(f"[{get_timestamp()}] ✅ AllRecipes scraping pipeline complete!")
         print(f"[{get_timestamp()}] Successfully processed {len(recipe_ids)} recipes for {fruit_name}")
@@ -139,25 +137,33 @@ def scrape_jam_from_allrecipes(fruit_name: str, scrape_count: int = 10, insert_c
         raise
 
 def main():
-    """Main function for testing the script."""
+    """Main function."""
+    parser = argparse.ArgumentParser(description="Scrape jam recipes from AllRecipes")
+    parser.add_argument("--fruit", "-f", required=True, help="Fruit name to search for (e.g., cherry, strawberry)")
+    parser.add_argument("--count", "-c", type=int, default=10, help="Number of recipes to scrape (default: 10)")
+    parser.add_argument("--insert", "-i", type=int, default=5, help="Number of recipes to insert (default: 5)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Show verbose output")
+    
+    args = parser.parse_args()
+    
     print(f"[{get_timestamp()}] AllRecipes jam scraper starting...")
+    print(f"[{get_timestamp()}] Verbose mode: {'ON' if args.verbose else 'OFF'}")
     
     try:
-        # Test with strawberry
-        fruit_name = "strawberry"
-        scrape_count = 10  # Scrape 10 recipes from search results
-        insert_count = 5   # Insert top 5 non-duplicate recipes
+        fruit_name = args.fruit
+        scrape_count = args.count
+        insert_count = args.insert
         
-        print(f"[{get_timestamp()}] Testing with fruit: {fruit_name}")
-        print(f"[{get_timestamp()}] Will scrape {scrape_count} recipes, insert top {insert_count} non-duplicates")
+        print(f"[{get_timestamp()}] Scraping {fruit_name} jam recipes...")
+        print(f"[{get_timestamp()}] Will scrape {scrape_count} recipes, insert top {insert_count}")
         
         recipe_ids = scrape_jam_from_allrecipes(fruit_name, scrape_count, insert_count)
         
-        print(f"[{get_timestamp()}] Test completed successfully!")
+        print(f"[{get_timestamp()}] Scraping completed successfully!")
         print(f"[{get_timestamp()}] Recipe IDs inserted: {recipe_ids}")
         
     except Exception as e:
-        print(f"[{get_timestamp()}] ❌ Test failed:")
+        print(f"[{get_timestamp()}] ❌ Scraping failed:")
         print(f"Error: {e}")
         sys.exit(1)
 

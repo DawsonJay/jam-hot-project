@@ -1,8 +1,8 @@
 """
-AllRecipes.com Adapter
+Serious Eats Adapter
 
-This module implements the BaseAdapter interface for scraping recipes from AllRecipes.com.
-It handles AllRecipes-specific HTML parsing and data extraction.
+This module implements the BaseAdapter interface for scraping recipes from Serious Eats.
+It handles Serious Eats-specific HTML parsing and data extraction.
 """
 
 import re
@@ -12,37 +12,37 @@ from urllib.parse import quote_plus
 from scraper.adapters.base_adapter import BaseAdapter
 
 
-class AllRecipesAdapter(BaseAdapter):
+class SeriousEatsAdapter(BaseAdapter):
     """
-    Adapter for scraping recipes from AllRecipes.com
+    Adapter for scraping recipes from Serious Eats
     """
     
     def get_site_name(self) -> str:
         """Return the name of this site."""
-        return "AllRecipes"
+        return "Serious Eats"
     
     def get_scraping_method(self) -> str:
         """Return the scraping method this adapter needs."""
-        return "requests"  # AllRecipes works fine with static HTML
+        return "requests"  # Serious Eats works with static HTML (no bot protection detected)
     
     def search_for_fruit(self, fruit_name: str) -> str:
         """
-        Generate a search URL for finding jam recipes containing this fruit on AllRecipes.
+        Generate a search URL for finding jam recipes containing this fruit on Serious Eats.
         
         Args:
             fruit_name (str): The name of the fruit to search for
             
         Returns:
-            str: The search URL for AllRecipes
+            str: The search URL for Serious Eats
         """
-        # AllRecipes search URL format - search for fruit jam specifically
-        search_query = f"{fruit_name} jam"  # Search for "fruit jam" to get jam recipes
+        # Serious Eats search URL format - search for fruit jam specifically
+        search_query = f"{fruit_name} jam"
         encoded_query = quote_plus(search_query)
-        return f"https://www.allrecipes.com/search?q={encoded_query}"
+        return f"https://www.seriouseats.com/search?q={encoded_query}"
     
     def get_recipe_urls(self, search_results_html: str, count: int = 10) -> List[str]:
         """
-        Extract recipe URLs from AllRecipes search results HTML, filtering for jam recipes.
+        Extract recipe URLs from Serious Eats search results HTML, filtering for jam recipes.
         
         Args:
             search_results_html (str): The HTML content of the search results page
@@ -56,16 +56,50 @@ class AllRecipesAdapter(BaseAdapter):
         
         soup = BeautifulSoup(search_results_html, 'html.parser')
         
-        # Find all recipe cards/links
-        recipe_links = soup.find_all('a', href=re.compile(r'/recipe/\d+/'))
+        # Try multiple selectors for recipe links - Serious Eats specific
+        recipe_links = []
+        
+        # Try different possible selectors for Serious Eats recipe links
+        selectors_to_try = [
+            'a[data-doc-id]',        # Serious Eats specific - recipe cards with data-doc-id
+            '.card[data-doc-id]',    # Alternative selector for recipe cards
+            '.card-list__item a',    # Card list item links
+            'a[href*="seriouseats.com"][href*="recipe"]',  # Recipe links
+            'a[href*="seriouseats.com"][href*="jam"]',     # Jam-specific links
+            'a[href*="/recipes/"]',  # Direct recipe links
+            'a[href*="/recipe/"]',   # Alternative recipe path
+            '.recipe-card a',        # Recipe card links
+            '.search-result a',      # Search result links
+            'article a',             # Article links
+            'h3 a, h4 a',            # Heading links
+            '.post-title a',         # Post title links
+            '.entry-title a',        # Entry title links
+        ]
+        
+        for selector in selectors_to_try:
+            links = soup.select(selector)
+            if links:
+                recipe_links = links
+                print(f"✅ Found {len(recipe_links)} recipe links using selector: {selector}")
+                break
+        
+        if not recipe_links:
+            print("❌ No recipe links found with any selector")
+            # Let's see what we actually have in the HTML
+            print("HTML preview (first 2000 chars):")
+            print(search_results_html[:2000])
+            return []
         
         jam_recipe_urls = []
         
         for link in recipe_links:
             # Extract the URL
             url = link.get('href')
+            if not url:
+                continue
+                
             if not url.startswith('http'):
-                url = 'https://www.allrecipes.com' + url
+                url = f"https://www.seriouseats.com{url}"
             
             # Extract the title from the link text or nearby elements
             title = link.get_text(strip=True)
@@ -75,13 +109,21 @@ class AllRecipesAdapter(BaseAdapter):
                 # Look for title in parent or sibling elements
                 parent = link.parent
                 if parent:
-                    title_elem = parent.find(['h3', 'h4', 'span'], class_=re.compile(r'title|heading|name'))
+                    title_elem = parent.find(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
                     if title_elem:
                         title = title_elem.get_text(strip=True)
+                    else:
+                        # Try alt text or other attributes
+                        title = link.get('alt', link.get('title', ''))
             
-            # Check if this is a jam recipe (has "jam" in the title)
-            if title and 'jam' in title.lower():
+            # Filter out navigation links
+            navigation_keywords = ['recipes', 'dinner', 'easy', 'cuisines', 'cooking', 'dishes', 'ingredients', 'meal', 'techniques', 'add', 'login', 'see all', 'home', 'about', 'contact']
+            is_navigation = any(keyword in title.lower() for keyword in navigation_keywords)
+            
+            # Check if this is a jam recipe (has "jam" in the title) - like AllRecipes does
+            if title and 'jam' in title.lower() and url not in jam_recipe_urls and not is_navigation:
                 jam_recipe_urls.append(url)
+                print(f"Found jam recipe: {title[:50]}... -> {url}")
                 
                 # Stop when we have enough jam recipes
                 if len(jam_recipe_urls) >= count:
@@ -91,7 +133,7 @@ class AllRecipesAdapter(BaseAdapter):
     
     def extract_recipe_data(self, recipe_html: str, recipe_url: str) -> Dict[str, Any]:
         """
-        Extract recipe data from an AllRecipes recipe page HTML.
+        Extract recipe data from a Serious Eats recipe page HTML.
         
         Args:
             recipe_html (str): The HTML content of the recipe page
@@ -145,16 +187,24 @@ class AllRecipesAdapter(BaseAdapter):
         
         # Validate that this is actually a jam recipe
         if not self._is_jam_recipe(recipe_data):
+            print(f"⚠️  Recipe '{title}' failed jam validation:")
+            print(f"    Title: {title}")
+            print(f"    Description: {description[:100]}...")
+            print(f"    Ingredients count: {len(ingredients)}")
+            if ingredients:
+                print(f"    First ingredient: {ingredients[0].get('name', '')}")
             raise ValueError(f"Recipe '{title}' is not a jam recipe")
         
         return recipe_data
     
     def _extract_title(self, soup) -> str:
         """Extract recipe title from HTML."""
-        # Try multiple selectors for title
+        # Try multiple selectors for title - Serious Eats specific
         title_selectors = [
-            'h1.article-heading',
-            'h1[class*="heading"]',
+            'h1.recipe-title',
+            'h1[class*="title"]',
+            'h1.entry-title',
+            'h1.post-title',
             'h1',
             'title'
         ]
@@ -174,32 +224,23 @@ class AllRecipesAdapter(BaseAdapter):
         """Extract ingredients from HTML."""
         ingredients = []
         
-        # Look for structured ingredients list
-        ingredient_items = soup.select('.mm-recipes-structured-ingredients__list-item')
+        # Look for structured ingredients list - Serious Eats specific selectors
+        ingredient_items = soup.select('.structured-ingredients__list-item, .recipe-ingredients li, .ingredients li, .ingredient-item, .recipe-ingredient, .mntl-structured-ingredients__list-item, .ingredient, .recipe-ingredients-list li')
         
         for item in ingredient_items:
             try:
-                # Extract quantity, unit, and name from structured data
-                quantity_elem = item.select_one('[data-ingredient-quantity="true"]')
-                unit_elem = item.select_one('[data-ingredient-unit="true"]')
-                name_elem = item.select_one('[data-ingredient-name="true"]')
-                
-                if quantity_elem and unit_elem and name_elem:
-                    quantity = quantity_elem.get_text(strip=True)
-                    unit = unit_elem.get_text(strip=True)
-                    name = name_elem.get_text(strip=True)
-                    
-                    # Create full item text
-                    item_text = f"{quantity} {unit} {name}"
-                    
+                item_text = item.get_text(strip=True)
+                if item_text:
+                    # Try to parse quantity, unit, and name
+                    # This is a simplified parser - Serious Eats might have different structure
                     ingredients.append({
                         "item": item_text,
-                        "quantity": quantity,
-                        "unit": unit,
-                        "name": name
+                        "quantity": "",
+                        "unit": "",
+                        "name": item_text
                     })
             except Exception as e:
-                # If structured parsing fails, try to get the full text
+                # If parsing fails, just use the full text
                 item_text = item.get_text(strip=True)
                 if item_text:
                     ingredients.append({
@@ -215,12 +256,14 @@ class AllRecipesAdapter(BaseAdapter):
         """Extract cooking instructions from HTML."""
         instructions = []
         
-        # Look for instruction steps in the recipe content
-        # AllRecipes uses specific selectors for instruction steps
+        # Look for instruction steps in the recipe content - Serious Eats specific
         instruction_selectors = [
-            '.mm-recipes-steps__content .mntl-sc-block-html',
-            '.mntl-sc-block-html p',
-            'ol.mntl-sc-block-html li'
+            '.recipe-instructions li',
+            '.instructions li',
+            '.recipe-steps li',
+            '.cooking-instructions p',
+            '.recipe-directions li',
+            '.directions li'
         ]
         
         for selector in instruction_selectors:
@@ -233,16 +276,6 @@ class AllRecipesAdapter(BaseAdapter):
             if instructions:  # If we found instructions, break
                 break
         
-        # If no instructions found, try alternative approach
-        if not instructions:
-            # Look for any paragraph with cooking-related keywords
-            all_paragraphs = soup.find_all('p', class_='mntl-sc-block-html')
-            for p in all_paragraphs:
-                text = p.get_text(strip=True)
-                if any(keyword in text.lower() for keyword in ['combine', 'mix', 'cook', 'boil', 'heat', 'stir', 'add']):
-                    if len(text) > 20:  # Reasonable instruction length
-                        instructions.append(text)
-        
         return instructions
     
     def _extract_rating_info(self, soup) -> tuple:
@@ -250,8 +283,8 @@ class AllRecipesAdapter(BaseAdapter):
         rating = 0.0
         review_count = 0
         
-        # Look for rating elements
-        rating_elem = soup.select_one('.mm-recipes-review-bar__rating')
+        # Look for rating elements - Serious Eats specific
+        rating_elem = soup.select_one('.rating, .recipe-rating, .star-rating, .review-rating')
         if rating_elem:
             try:
                 rating = float(rating_elem.get_text(strip=True))
@@ -259,10 +292,10 @@ class AllRecipesAdapter(BaseAdapter):
                 pass
         
         # Look for review count
-        review_elem = soup.select_one('.mm-recipes-review-bar__rating-count')
+        review_elem = soup.select_one('.review-count, .reviews, .rating-count, .comment-count')
         if review_elem:
             review_text = review_elem.get_text(strip=True)
-            # Extract number from text like "(948)"
+            # Extract number from text
             numbers = re.findall(r'\d+', review_text)
             if numbers:
                 try:
@@ -274,12 +307,15 @@ class AllRecipesAdapter(BaseAdapter):
     
     def _extract_image_url(self, soup) -> str:
         """Extract primary recipe image URL from HTML."""
-        # Try multiple selectors for recipe image
+        # Try multiple selectors for recipe image - Serious Eats specific
         image_selectors = [
             'meta[property="og:image"]',
             'meta[name="twitter:image"]',
             '.recipe-image img',
-            '.mm-recipes-intro img'
+            '.recipe-photo img',
+            '.main-image img',
+            '.featured-image img',
+            '.post-image img'
         ]
         
         for selector in image_selectors:
@@ -302,9 +338,8 @@ class AllRecipesAdapter(BaseAdapter):
         # Get all text from the page
         all_text = soup.get_text()
         
-        # Look for clean serving patterns
+        # Look for serving patterns - Serious Eats specific
         serving_patterns = [
-            r'Original recipe \(1X\) yields (\d+) servings',
             r'(\d+)\s+servings?',
             r'yields?\s+(\d+)\s+servings?',
             r'makes?\s+(\d+)\s+servings?',
@@ -322,33 +357,19 @@ class AllRecipesAdapter(BaseAdapter):
                 else:
                     return f"{serving_count} servings"
         
-        # Fallback: look for serving information in specific elements
-        serving_selectors = [
-            '.mm-recipes-serving-size-adjuster',
-            '.recipe-serving',
-            '.servings'
-        ]
-        
-        for selector in serving_selectors:
-            serving_elem = soup.select_one(selector)
-            if serving_elem:
-                serving_text = serving_elem.get_text(strip=True)
-                # Clean up the text - look for just the serving number
-                serving_match = re.search(r'(\d+)\s+(servings?|jars?)', serving_text, re.IGNORECASE)
-                if serving_match:
-                    return f"{serving_match.group(1)} {serving_match.group(2)}"
-        
         return ""
     
     def _extract_time_info(self, soup) -> Dict[str, str]:
         """Extract time information (prep, cook, total) from HTML."""
         time_info = {}
         
-        # Look for time-related elements
+        # Look for time-related elements - Serious Eats specific
         time_selectors = [
             '.recipe-time',
             '.cooking-time',
-            '.prep-time'
+            '.prep-time',
+            '.total-time',
+            '.recipe-meta .time'
         ]
         
         for selector in time_selectors:
@@ -368,11 +389,14 @@ class AllRecipesAdapter(BaseAdapter):
     
     def _extract_description(self, soup) -> str:
         """Extract recipe description from HTML."""
-        # Look for description in meta tags or intro content
+        # Look for description in meta tags or intro content - Serious Eats specific
         desc_selectors = [
             'meta[name="description"]',
-            '.mm-recipes-intro__content p',
-            '.recipe-description'
+            '.recipe-description',
+            '.recipe-intro p',
+            '.recipe-summary',
+            '.post-excerpt p',
+            '.entry-summary p'
         ]
         
         for selector in desc_selectors:
@@ -448,11 +472,14 @@ class AllRecipesAdapter(BaseAdapter):
                 has_jam_ingredients = True
                 break
         
-        # Check for non-jam indicators (baking, cooking, etc.)
+        # Check for non-jam indicators (baking, cooking, frozen treats, etc.)
         non_jam_keywords = [
             "cake", "cupcake", "muffin", "bread", "cookie", "pie", "tart",
             "scuffin", "roll", "egg roll", "fried", "baked", "oven",
-            "flour", "baking powder", "baking soda", "yeast", "dough"
+            "flour", "baking powder", "baking soda", "yeast", "dough",
+            "popsicle", "popsicles", "ice cream", "sorbet", "sherbet",
+            "frozen", "freeze", "chilled", "cold", "ice", "smoothie",
+            "drink", "beverage", "cocktail", "mocktail", "juice"
         ]
         
         has_non_jam_indicators = any(keyword in title for keyword in non_jam_keywords)

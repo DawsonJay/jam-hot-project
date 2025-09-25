@@ -80,5 +80,14 @@ class BaseAdapter(ABC):
             List[str]: List of fruit names found in the ingredients
         """
         pass
+    
+    def get_scraping_method(self) -> str:
+        """
+        Return the scraping method this adapter needs.
+        
+        Returns:
+            str: The scraping method ("requests" for static HTML, "selenium" for JavaScript-rendered content)
+        """
+        return "requests"  # Default to fast method
 
 
