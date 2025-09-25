@@ -120,16 +120,78 @@ class SeriousEatsAdapter(BaseAdapter):
             navigation_keywords = ['recipes', 'dinner', 'easy', 'cuisines', 'cooking', 'dishes', 'ingredients', 'meal', 'techniques', 'add', 'login', 'see all', 'home', 'about', 'contact']
             is_navigation = any(keyword in title.lower() for keyword in navigation_keywords)
             
-            # Check if this is a jam recipe (has "jam" in the title) - like AllRecipes does
-            if title and 'jam' in title.lower() and url not in jam_recipe_urls and not is_navigation:
+            # Check if this is a jam recipe (has "jam" in the title AND is actually making jam)
+            # Filter out recipes that USE jam (like sandwiches, cakes) vs recipes that MAKE jam
+            is_actual_jam_recipe = (
+                title and 
+                'jam' in title.lower() and 
+                url not in jam_recipe_urls and 
+                not is_navigation and
+                self._is_actual_jam_recipe_title(title)
+            )
+            
+            if is_actual_jam_recipe:
                 jam_recipe_urls.append(url)
                 print(f"Found jam recipe: {title[:50]}... -> {url}")
                 
-                # Stop when we have enough jam recipes
-                if len(jam_recipe_urls) >= count:
+                # Stop when we have enough jam recipes (collect more to account for rejections)
+                if len(jam_recipe_urls) >= count * 3:  # Collect 3x more to account for rejections
                     break
         
         return jam_recipe_urls
+    
+    def _is_actual_jam_recipe_title(self, title: str) -> bool:
+        """
+        Check if a title represents a recipe FOR making jam (not a recipe that USES jam).
+        
+        Args:
+            title (str): The recipe title to check
+            
+        Returns:
+            bool: True if this is a recipe for making jam, False otherwise
+        """
+        title_lower = title.lower()
+        
+        # Recipes that USE jam (should be filtered out)
+        uses_jam_keywords = [
+            'sandwich', 'sandwiches', 'cake', 'cupcake', 'muffin', 'bread', 'cookie', 'pie', 'tart',
+            'toast', 'pancake', 'waffle', 'crepe', 'danish', 'croissant', 'biscuit', 'scone',
+            'cheesecake', 'trifle', 'parfait', 'sundae', 'milkshake', 'smoothie', 'cocktail',
+            'sauce', 'glaze', 'frosting', 'icing', 'filling', 'topping', 'spread', 'dip',
+            'salad', 'dressing', 'marinade', 'rub', 'seasoning', 'garnish', 'garnish',
+            'with jam', 'using jam', 'jam filled', 'jam topped', 'jam glazed'
+        ]
+        
+        # Check if this is a recipe that USES jam
+        if any(keyword in title_lower for keyword in uses_jam_keywords):
+            return False
+        
+        # Recipes that MAKE jam (should be included)
+        makes_jam_patterns = [
+            'jam recipe', 'jam making', 'how to make', 'perfect jam', 'homemade jam',
+            'jam from', 'jam with', 'jam and', 'jam or', 'jam of', 'jam for',
+            'strawberry jam', 'cherry jam', 'blueberry jam', 'peach jam', 'apple jam',
+            'rhubarb jam', 'blackberry jam', 'raspberry jam', 'grape jam', 'orange jam',
+            'lemon jam', 'lime jam', 'apricot jam', 'plum jam', 'fig jam', 'pear jam'
+        ]
+        
+        # Check if this is a recipe that MAKES jam
+        if any(pattern in title_lower for pattern in makes_jam_patterns):
+            return True
+        
+        # If it just has "jam" but doesn't clearly make or use jam, be conservative
+        # Only include if it has fruit + jam pattern
+        fruit_keywords = [
+            'strawberry', 'cherry', 'blueberry', 'peach', 'apple', 'rhubarb', 'blackberry',
+            'raspberry', 'grape', 'orange', 'lemon', 'lime', 'apricot', 'plum', 'fig', 'pear',
+            'cranberry', 'elderberry', 'gooseberry', 'currant', 'mulberry', 'boysenberry'
+        ]
+        
+        has_fruit = any(fruit in title_lower for fruit in fruit_keywords)
+        has_jam = 'jam' in title_lower
+        
+        # Only include if it has both fruit and jam (likely a jam recipe)
+        return has_fruit and has_jam
     
     def extract_recipe_data(self, recipe_html: str, recipe_url: str) -> Dict[str, Any]:
         """
@@ -195,6 +257,14 @@ class SeriousEatsAdapter(BaseAdapter):
                 print(f"    First ingredient: {ingredients[0].get('name', '')}")
             raise ValueError(f"Recipe '{title}' is not a jam recipe")
         
+        # Validate that this recipe has a rating (critical for quality assessment)
+        if rating == 0.0:
+            print(f"⚠️  Recipe '{title}' has no rating - rejecting:")
+            print(f"    Title: {title}")
+            print(f"    Rating: {rating} stars")
+            print(f"    Review count: {review_count}")
+            raise ValueError(f"Recipe '{title}' has no rating - cannot assess quality")
+        
         return recipe_data
     
     def _extract_title(self, soup) -> str:
@@ -258,6 +328,8 @@ class SeriousEatsAdapter(BaseAdapter):
         
         # Look for instruction steps in the recipe content - Serious Eats specific
         instruction_selectors = [
+            '.mntl-sc-block-group--OL li',  # Serious Eats specific - ordered list for instructions
+            'ol li',                        # General ordered list items
             '.recipe-instructions li',
             '.instructions li',
             '.recipe-steps li',
@@ -283,25 +355,94 @@ class SeriousEatsAdapter(BaseAdapter):
         rating = 0.0
         review_count = 0
         
-        # Look for rating elements - Serious Eats specific
-        rating_elem = soup.select_one('.rating, .recipe-rating, .star-rating, .review-rating')
-        if rating_elem:
+        # Look for JSON-LD structured data first (Serious Eats uses this)
+        json_ld_scripts = soup.find_all('script', type='application/ld+json')
+        for script in json_ld_scripts:
             try:
-                rating = float(rating_elem.get_text(strip=True))
-            except ValueError:
-                pass
+                import json
+                data = json.loads(script.string)
+                
+                # Handle both single objects and arrays
+                if isinstance(data, list):
+                    for item in data:
+                        rating, review_count = self._extract_rating_from_json_ld(item, rating, review_count)
+                        if rating > 0.0 or review_count > 0:  # If we found data, break
+                            break
+                elif isinstance(data, dict):
+                    rating, review_count = self._extract_rating_from_json_ld(data, rating, review_count)
+                        
+            except (json.JSONDecodeError, AttributeError):
+                continue
         
-        # Look for review count
-        review_elem = soup.select_one('.review-count, .reviews, .rating-count, .comment-count')
-        if review_elem:
-            review_text = review_elem.get_text(strip=True)
-            # Extract number from text
-            numbers = re.findall(r'\d+', review_text)
-            if numbers:
+        # Fallback to traditional selectors if JSON-LD didn't work
+        if rating == 0.0 and review_count == 0:
+            # Look for rating elements - Serious Eats specific
+            rating_elem = soup.select_one('.rating, .recipe-rating, .star-rating, .review-rating')
+            if rating_elem:
                 try:
-                    review_count = int(numbers[0])
+                    rating = float(rating_elem.get_text(strip=True))
                 except ValueError:
                     pass
+            
+            # Look for review count
+            review_elem = soup.select_one('.review-count, .reviews, .rating-count, .comment-count')
+            if review_elem:
+                review_text = review_elem.get_text(strip=True)
+                # Extract number from text
+                numbers = re.findall(r'\d+', review_text)
+                if numbers:
+                    try:
+                        review_count = int(numbers[0])
+                    except ValueError:
+                        pass
+        
+        return rating, review_count
+    
+    def _extract_rating_from_json_ld(self, data: dict, current_rating: float, current_review_count: int) -> tuple:
+        """Extract rating from JSON-LD structured data."""
+        rating = current_rating
+        review_count = current_review_count
+        
+        # Look for aggregateRating
+        if 'aggregateRating' in data:
+            agg_rating = data['aggregateRating']
+            if isinstance(agg_rating, dict):
+                if 'ratingValue' in agg_rating:
+                    try:
+                        rating = float(agg_rating['ratingValue'])
+                    except (ValueError, TypeError):
+                        pass
+                if 'ratingCount' in agg_rating:
+                    try:
+                        review_count = int(agg_rating['ratingCount'])
+                    except (ValueError, TypeError):
+                        pass
+        
+        # Look for reviewRating in reviews (only if we don't have aggregateRating data)
+        if 'review' in data and (rating == 0.0 or review_count == 0):
+            reviews = data['review']
+            if isinstance(reviews, list):
+                # Count reviews and get average rating
+                total_rating = 0
+                review_count = len(reviews)
+                for review in reviews:
+                    if isinstance(review, dict) and 'reviewRating' in review:
+                        review_rating = review['reviewRating']
+                        if isinstance(review_rating, dict) and 'ratingValue' in review_rating:
+                            try:
+                                total_rating += float(review_rating['ratingValue'])
+                            except (ValueError, TypeError):
+                                pass
+                if review_count > 0:
+                    rating = total_rating / review_count
+            elif isinstance(reviews, dict) and 'reviewRating' in reviews:
+                review_rating = reviews['reviewRating']
+                if isinstance(review_rating, dict) and 'ratingValue' in review_rating:
+                    try:
+                        rating = float(review_rating['ratingValue'])
+                        review_count = 1
+                    except (ValueError, TypeError):
+                        pass
         
         return rating, review_count
     
