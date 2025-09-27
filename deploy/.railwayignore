@@ -1,0 +1,13 @@
+# Railway ignore file - only deploy folder contents should be included
+# This file ensures Railway only sees the deployment files
+
+# Ignore everything except what's explicitly needed for deployment
+../*
+!../deploy/*
+
+# Within deploy folder, ignore any temporary files
+*.pyc
+__pycache__/
+.env
+.DS_Store
+*.log
