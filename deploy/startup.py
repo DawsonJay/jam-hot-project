@@ -33,6 +33,7 @@ def main():
     except subprocess.CalledProcessError as e:
         print(f"❌ Database restoration failed: {e}")
         print(f"Error output: {e.stderr}")
+        print(f"Standard output: {e.stdout}")
         # Don't exit - continue with basic setup
         print("⚠️  Continuing with basic database setup...")
         
