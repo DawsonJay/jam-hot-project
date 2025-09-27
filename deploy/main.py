@@ -130,11 +130,11 @@ async def get_recipe_count() -> Dict[str, Any]:
         # Top fruit combinations
         cur.execute("""
             SELECT 
-                STRING_AGG(fp.fruit_name, ', ' ORDER BY fp.fruit_name) as fruit_combination,
+                STRING_AGG(f.fruit_name, ', ' ORDER BY f.fruit_name) as fruit_combination,
                 COUNT(*) as recipe_count
             FROM recipes r
             JOIN recipe_fruits rf ON r.id = rf.recipe_id
-            JOIN fruit_profiles fp ON rf.fruit_id = fp.id
+            JOIN fruits f ON rf.fruit_id = f.id
             WHERE rf.is_primary = true
             GROUP BY r.id
             HAVING COUNT(*) > 0
