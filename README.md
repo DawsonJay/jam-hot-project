@@ -10,6 +10,19 @@ Upload a photo of fruit → Get fruit identification + jam recipes + flavor prof
 
 **Focus**: Fruits only (herbs, spices, and other ingredients are not identified or profiled)
 
+## Deployment
+
+**Live Application**: https://jam-hot-project-production.up.railway.app
+
+**API Endpoints**:
+- `GET /` - API status and available endpoints
+- `GET /health` - Health check
+- `GET /recipes/titles` - Get all recipe titles
+- `GET /recipes` - Get all recipes with full data
+- `GET /recipes/count` - Get recipe statistics
+- `GET /fruits` - Get all fruit profiles
+- `POST /admin/restore-database?api_key=jam-hot-admin-2025` - Manually restore database from dump (requires API key)
+
 ## Quick Start
 
 **1. Set up environment variables:**

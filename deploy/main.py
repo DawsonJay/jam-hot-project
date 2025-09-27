@@ -116,7 +116,7 @@ async def get_recipe_count() -> Dict[str, Any]:
         total_recipes = cur.fetchone()[0]
         
         # Total fruit profiles
-        cur.execute("SELECT COUNT(*) FROM fruit_profiles")
+        cur.execute("SELECT COUNT(*) FROM profiles")
         total_fruits = cur.fetchone()[0]
         
         # Recipe-fruit relationships
@@ -205,11 +205,12 @@ async def get_fruit_profiles() -> List[Dict[str, Any]]:
         
         cur.execute("""
             SELECT 
-                id, fruit_name, scientific_name, description, 
-                season, nutritional_data, jam_making_properties,
-                image_url, created_date
-            FROM fruit_profiles 
-            ORDER BY fruit_name
+                p.fruit_id, f.fruit_name, p.scientific_name, p.description, 
+                p.season, p.nutrition, p.jam_uses,
+                p.created_date, p.created_date
+            FROM profiles p
+            JOIN fruits f ON p.fruit_id = f.id
+            ORDER BY f.fruit_name
         """)
         
         fruits = []
@@ -236,10 +237,18 @@ async def get_fruit_profiles() -> List[Dict[str, Any]]:
         raise HTTPException(status_code=500, detail=f"Failed to fetch fruit profiles: {str(e)}")
 
 @app.post("/admin/restore-database", summary="Restore Database from Dump")
-async def restore_database():
+async def restore_database(api_key: str = None):
     """Manually restore database from dump file."""
     import subprocess
     import sys
+    
+    # Check API key
+    expected_key = os.getenv("ADMIN_API_KEY", "jam-hot-admin-2025")
+    if api_key != expected_key:
+        raise HTTPException(
+            status_code=401, 
+            detail="Invalid API key. Use ?api_key=your-key-here"
+        )
     
     try:
         result = subprocess.run([sys.executable, "restore_from_dump.py"], 
