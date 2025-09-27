@@ -10,9 +10,16 @@ source .env
 # Create deploy directory if it doesn't exist
 mkdir -p deploy
 
-# Export database as INSERT statements (with schema)
+# Export database as INSERT statements (schema first, then data)
 echo "Creating database dump with INSERT statements..."
-PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" --inserts > deploy/db-dump.sql
+
+# First export schema only
+echo "Exporting schema..."
+PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" --schema-only > deploy/db-dump.sql
+
+# Then append data with INSERT statements
+echo "Exporting data..."
+PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" --data-only --inserts >> deploy/db-dump.sql
 
 echo "✅ Database exported to deploy/ directory"
 echo ""

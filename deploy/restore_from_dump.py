@@ -47,7 +47,7 @@ def restore_from_dump():
         with open('db-dump.sql', 'r') as f:
             dump_content = f.read()
         
-        # Execute SQL statements (CREATE TABLE and INSERT)
+        # Execute SQL statements (already properly ordered by export script)
         print("📊 Executing SQL statements...")
         
         # Split into individual statements
@@ -66,7 +66,7 @@ def restore_from_dump():
                 not clean_statement):
                 continue
                 
-            # Execute SQL statements (CREATE, ALTER, INSERT)
+            # Execute SQL statements (CREATE, ALTER, INSERT in proper order)
             if (clean_statement.startswith('CREATE ') or 
                 clean_statement.startswith('ALTER ') or
                 clean_statement.startswith('INSERT ')):
