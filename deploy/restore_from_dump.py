@@ -98,8 +98,14 @@ def restore_from_dump():
                 i += 1
                 continue
                 
-            # Handle regular SQL statements
-            if line.endswith(';'):
+            # Handle regular SQL statements (only CREATE, ALTER, DROP, etc.)
+            if (line.endswith(';') and 
+                (line.startswith('CREATE ') or 
+                 line.startswith('ALTER ') or 
+                 line.startswith('DROP ') or
+                 line.startswith('INSERT ') or
+                 line.startswith('UPDATE ') or
+                 line.startswith('DELETE '))):
                 print(f"   Executing SQL statement...")
                 cursor.execute(line)
             
