@@ -50,8 +50,21 @@ def restore_from_dump():
         # Execute SQL statements in proper order
         print("📊 Executing SQL statements...")
         
-        # Split into individual statements
-        statements = [stmt.strip() for stmt in dump_content.split(';') if stmt.strip()]
+        # Parse statements properly (handle multi-line statements)
+        statements = []
+        current_statement = ""
+        
+        for line in dump_content.split('\n'):
+            line = line.strip()
+            if not line or line.startswith('--'):
+                continue
+                
+            current_statement += line + " "
+            
+            # If line ends with semicolon, we have a complete statement
+            if line.endswith(';'):
+                statements.append(current_statement.strip())
+                current_statement = ""
         
         # Collect statements by type for proper ordering
         create_statements = []
@@ -62,12 +75,8 @@ def restore_from_dump():
             # Clean up the statement (remove extra whitespace and newlines)
             clean_statement = ' '.join(statement.split())
             
-            # Skip comments, SET statements, and psql meta-commands
-            if (clean_statement.startswith('--') or 
-                clean_statement.startswith('SET ') or
-                clean_statement.startswith('SELECT pg_catalog') or
-                clean_statement.startswith('\\') or
-                not clean_statement):
+            # Skip empty statements
+            if not clean_statement:
                 continue
                 
             # Collect statements by type
