@@ -1,6 +1,10 @@
 -- Simple database dump
 -- Created by create_simple_dump.py
 
+-- Sequences
+CREATE SEQUENCE public.fruits_id_seq START 30;
+CREATE SEQUENCE public.recipes_id_seq START 891;
+
 -- Table: fruit_coverage
 CREATE TABLE public.fruit_coverage (
     id integer NULL,

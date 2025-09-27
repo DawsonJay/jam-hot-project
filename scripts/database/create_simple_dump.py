@@ -42,6 +42,23 @@ def create_simple_dump():
         f.write("-- Simple database dump\n")
         f.write("-- Created by create_simple_dump.py\n\n")
         
+        # Get sequences first
+        cursor.execute("""
+            SELECT sequence_name 
+            FROM information_schema.sequences 
+            WHERE sequence_schema = 'public'
+            ORDER BY sequence_name
+        """)
+        sequences = [row[0] for row in cursor.fetchall()]
+        
+        if sequences:
+            f.write("-- Sequences\n")
+            for seq in sequences:
+                cursor.execute(f"SELECT last_value FROM {seq}")
+                last_val = cursor.fetchone()[0]
+                f.write(f"CREATE SEQUENCE public.{seq} START {last_val + 1};\n")
+            f.write("\n")
+        
         # Get table schemas
         cursor.execute("""
             SELECT table_name 
