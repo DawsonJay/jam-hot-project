@@ -39,7 +39,7 @@ class FoodNetworkAdapter(BaseAdapter):
         encoded_query = search_query.replace(" ", "%20")
         return f"https://foodnetwork.co.uk/search?q={encoded_query}"
     
-    def get_recipe_urls(self, search_results_html: str, count: int = 10) -> List[str]:
+    def get_recipe_urls(self, search_results_html: str) -> List[str]:
         """
         Extract recipe URLs from Food Network search results.
         
@@ -74,7 +74,7 @@ class FoodNetworkAdapter(BaseAdapter):
             return []
         
         for link in links:
-            if len(recipe_urls) >= count:
+            if len(recipe_urls) >= 10:
                 break
                 
             href = link.get('href')
@@ -90,7 +90,7 @@ class FoodNetworkAdapter(BaseAdapter):
                 recipe_urls.append(href)
                 print(f"Found recipe: {href}")
         
-        return recipe_urls[:count]
+        return recipe_urls[:10]
     
     def _is_recipe_url(self, url: str) -> bool:
         """
@@ -141,7 +141,6 @@ class FoodNetworkAdapter(BaseAdapter):
         servings = self._extract_servings(soup)
         
         # Extract time info
-        time_info = self._extract_time_info(soup)
         
         # Extract rating and review count
         rating, review_count = self._extract_rating_info(soup)
@@ -157,7 +156,6 @@ class FoodNetworkAdapter(BaseAdapter):
             'ingredients': ingredients,
             'instructions': instructions,
             'servings': servings,
-            'time_info': time_info,
             'rating': rating,
             'review_count': review_count,
             'image_url': image_url,
@@ -294,53 +292,6 @@ class FoodNetworkAdapter(BaseAdapter):
         
         return 0
     
-    def _extract_time_info(self, soup: BeautifulSoup) -> Dict[str, str]:
-        """Extract cooking time information from JSON-LD structured data."""
-        time_info = {}
-        
-        # Look for JSON-LD structured data first (most reliable)
-        json_ld_scripts = soup.find_all('script', type='application/ld+json')
-        for script in json_ld_scripts:
-            try:
-                data = json.loads(script.string)
-                if isinstance(data, dict) and data.get('@type') == 'Recipe':
-                    # Check for prepTime field
-                    if 'prepTime' in data:
-                        time_info['prep_time'] = data['prepTime']
-                    # Check for cookTime field
-                    if 'cookTime' in data:
-                        time_info['cook_time'] = data['cookTime']
-                    # Check for totalTime field
-                    if 'totalTime' in data:
-                        time_info['total_time'] = data['totalTime']
-                    break
-            except (json.JSONDecodeError, TypeError):
-                continue
-        
-        # Fallback to HTML selectors if JSON-LD didn't work
-        if not time_info:
-            time_selectors = [
-                '.o-RecipeInfo__m-Time',
-                '.recipe-time',
-                '.cook-time',
-                '[data-testid="time"]',
-            ]
-            
-            for selector in time_selectors:
-                time_elem = soup.select_one(selector)
-                if time_elem:
-                    time_text = time_elem.get_text().strip()
-                    # Parse time information
-                    if 'prep' in time_text.lower():
-                        time_info['prep_time'] = time_text
-                    elif 'cook' in time_text.lower():
-                        time_info['cook_time'] = time_text
-                    elif 'total' in time_text.lower():
-                        time_info['total_time'] = time_text
-                    else:
-                        time_info['time'] = time_text
-        
-        return time_info
     
     def _extract_rating_info(self, soup: BeautifulSoup) -> tuple:
         """Extract rating and review count from JSON-LD structured data."""
@@ -496,7 +447,7 @@ class FoodNetworkAdapter(BaseAdapter):
     
     def _is_jam_recipe(self, recipe_data: Dict[str, Any]) -> bool:
         """
-        Validate that this is actually a jam recipe.
+        Validate that this is actually a jam recipe using shared logic.
         
         Args:
             recipe_data (Dict[str, Any]): Recipe data to validate
@@ -504,29 +455,8 @@ class FoodNetworkAdapter(BaseAdapter):
         Returns:
             bool: True if this appears to be a jam recipe
         """
-        title = recipe_data.get('title', '').lower()
-        description = recipe_data.get('description', '').lower()
-        ingredients = recipe_data.get('ingredients', [])
-        
-        # Check for jam-related keywords
-        jam_keywords = ['jam', 'preserve', 'jelly', 'marmalade']
-        has_jam_keyword = any(keyword in title for keyword in jam_keywords)
-        
-        # Check for non-jam keywords that should be filtered out
-        non_jam_keywords = [
-            'cake', 'cupcake', 'muffin', 'bread', 'cookie', 'pie', 'tart',
-            'sandwich', 'toast', 'pancake', 'waffle', 'crepe', 'danish',
-            'cheesecake', 'trifle', 'parfait', 'sundae', 'milkshake',
-            'smoothie', 'cocktail', 'sauce', 'glaze', 'frosting', 'icing',
-            'filling', 'topping', 'spread', 'dip', 'salad', 'dressing',
-            'marinade', 'rub', 'seasoning', 'garnish', 'popsicle', 'frozen',
-            'ice cream', 'sorbet', 'granita', 'sherbet'
-        ]
-        
-        has_non_jam_keyword = any(keyword in title for keyword in non_jam_keywords)
-        
-        # Must have jam keyword and not have non-jam keywords
-        return has_jam_keyword and not has_non_jam_keyword
+        from scraper.core.recipe_validator import is_jam_recipe
+        return is_jam_recipe(recipe_data)
     
     def extract_fruits_from_ingredients(self, ingredients: List[str]) -> List[str]:
         """

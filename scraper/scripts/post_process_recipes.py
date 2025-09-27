@@ -5,7 +5,7 @@ Post-processing script for recipe filtering.
 This script processes recipes after all orchestrators have completed:
 1. Groups recipes by primary fruit combinations
 2. Removes exact duplicates (keeps highest rated)
-3. Keeps best 5 recipes per combination (by popularity)
+3. Keeps best 10 recipes per combination (by popularity)
 4. Deletes excess recipes from database
 """
 
@@ -192,14 +192,14 @@ def process_combination(connection, fruit_combo: Tuple[str, ...], recipes: List[
     if duplicates_removed > 0 and verbose:
         print(f"[{get_timestamp()}]   Removed {duplicates_removed} exact duplicates")
     
-    # Select best 5
-    if len(unique_recipes) > 5:
+    # Select best 10
+    if len(unique_recipes) > 10:
         # Sort by popularity (rating * review_count)
         sorted_recipes = sorted(unique_recipes, 
                               key=lambda x: calculate_popularity_score(x[2], x[3]),
                               reverse=True)
-        kept_recipes = sorted_recipes[:5]
-        removed_recipes = sorted_recipes[5:]
+        kept_recipes = sorted_recipes[:10]
+        removed_recipes = sorted_recipes[10:]
         
         if verbose:
             print(f"[{get_timestamp()}]   KEPT ({len(kept_recipes)} recipes):")
@@ -289,7 +289,7 @@ def post_process_recipes(verbose: bool = False):
 
 def main():
     """Main function."""
-    parser = argparse.ArgumentParser(description="Post-process recipes to keep best 5 per primary fruit combination")
+    parser = argparse.ArgumentParser(description="Post-process recipes to keep best 10 per primary fruit combination")
     parser.add_argument("--verbose", "-v", action="store_true", 
                        help="Show detailed logging of kept/removed recipes")
     

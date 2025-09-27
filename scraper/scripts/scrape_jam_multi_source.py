@@ -21,6 +21,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 from scraper.core.adaptive_scraper import AdaptiveScraper
 from scraper.adapters.allrecipes_adapter import AllRecipesAdapter
 from scraper.adapters.serious_eats_adapter import SeriousEatsAdapter
+from scraper.adapters.food_network_adapter import FoodNetworkAdapter
+from scraper.adapters.bbc_good_food_adapter import BBCGoodFoodAdapter
 from scraper.scripts.insert_recipes import insert_recipes, connect_to_database
 
 def get_timestamp():
@@ -44,7 +46,7 @@ def scrape_jam_multi_source(fruit_name: str, sources: List[str] = None, recipes_
         Exception: If scraping or insertion fails
     """
     if sources is None:
-        sources = ["allrecipes", "serious_eats"]
+        sources = ["allrecipes", "serious_eats", "food_network"]
     
     print(f"[{get_timestamp()}] Starting multi-source jam scraping for: {fruit_name}")
     print(f"[{get_timestamp()}] Sources: {', '.join(sources)}")
@@ -68,6 +70,10 @@ def scrape_jam_multi_source(fruit_name: str, sources: List[str] = None, recipes_
                         adapter = AllRecipesAdapter()
                     elif source == "serious_eats":
                         adapter = SeriousEatsAdapter()
+                    elif source == "food_network":
+                        adapter = FoodNetworkAdapter()
+                    elif source == "bbc_good_food":
+                        adapter = BBCGoodFoodAdapter()
                     else:
                         print(f"[{get_timestamp()}] ⚠️  Unknown source: {source}, skipping...")
                         continue
@@ -149,8 +155,8 @@ def main():
     """Main function."""
     parser = argparse.ArgumentParser(description="Scrape jam recipes from multiple sources")
     parser.add_argument("--fruit", "-f", required=True, help="Fruit name to search for (e.g., cherry, strawberry)")
-    parser.add_argument("--sources", "-s", nargs="+", default=["allrecipes", "serious_eats"], 
-                       help="Sources to scrape from (default: allrecipes serious_eats)")
+    parser.add_argument("--sources", "-s", nargs="+", default=["allrecipes", "serious_eats", "food_network", "bbc_good_food"], 
+                       help="Sources to scrape from (default: allrecipes serious_eats food_network bbc_good_food)")
     parser.add_argument("--count", "-c", type=int, default=10, 
                        help="Number of recipes to scrape from each source (default: 10)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show verbose output")

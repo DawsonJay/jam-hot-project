@@ -118,21 +118,27 @@ def extract_fruits_from_recipe(recipe):
     # Extract fruits from each ingredient
     for ingredient in recipe['ingredients']:
         # Handle both old format ('ingredient') and new format ('name')
-        ingredient_text = ingredient.get('ingredient', '') or ingredient.get('name', '')
+        if isinstance(ingredient, dict):
+            ingredient_text = ingredient.get('ingredient', '') or ingredient.get('name', '')
+        else:
+            # Handle case where ingredient is a string
+            ingredient_text = str(ingredient)
+        
         if ingredient_text:
             fruits = extract_fruits_from_text(ingredient_text)
             all_fruits.update(fruits)
     
     return list(all_fruits)
 
-def insert_recipe_fruits(connection, recipe_id, fruits):
+def insert_recipe_fruits(connection, recipe_id, fruits, recipe_title=""):
     """
-    Insert recipe-fruit relationships into the database.
+    Insert recipe-fruit relationships into the database with proper primary fruit identification.
     
     Args:
         connection: Database connection
         recipe_id: Recipe ID
         fruits: List of fruit AI names
+        recipe_title: Recipe title for primary fruit identification
         
     Returns:
         int: Number of relationships inserted
@@ -141,6 +147,9 @@ def insert_recipe_fruits(connection, recipe_id, fruits):
     
     try:
         inserted_count = 0
+        
+        # Import supporting fruits logic
+        from scraper.supporting_fruits import is_supporting_fruit
         
         for fruit_name in fruits:
             # Check if fruit exists in fruits table
@@ -157,11 +166,14 @@ def insert_recipe_fruits(connection, recipe_id, fruits):
                 """, (recipe_id, fruit_id))
                 
                 if not cursor.fetchone():
-                    # Insert new relationship
+                    # Determine if this fruit should be primary
+                    is_primary = not is_supporting_fruit(fruit_name)
+                    
+                    # Insert new relationship with proper primary status
                     cursor.execute("""
                         INSERT INTO recipe_fruits (recipe_id, fruit_id, is_primary)
                         VALUES (%s, %s, %s)
-                    """, (recipe_id, fruit_id, True))  # All fruits are primary for now
+                    """, (recipe_id, fruit_id, is_primary))
                     inserted_count += 1
             else:
                 print(f"[{get_timestamp()}] ⚠️  Fruit '{fruit_name}' not found in fruits table")
@@ -243,8 +255,8 @@ def extract_fruits_from_all_recipes():
             if fruits:
                 print(f"[{get_timestamp()}] Found fruits: {fruits}")
                 
-                # Insert recipe-fruit relationships
-                inserted_count = insert_recipe_fruits(connection, recipe['id'], fruits)
+                # Insert recipe-fruit relationships with proper primary identification
+                inserted_count = insert_recipe_fruits(connection, recipe['id'], fruits, recipe.get('title', ''))
                 total_relationships += inserted_count
                 
                 print(f"[{get_timestamp()}] ✅ Inserted {inserted_count} fruit relationships")

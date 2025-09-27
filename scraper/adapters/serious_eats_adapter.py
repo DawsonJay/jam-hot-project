@@ -40,7 +40,7 @@ class SeriousEatsAdapter(BaseAdapter):
         encoded_query = quote_plus(search_query)
         return f"https://www.seriouseats.com/search?q={encoded_query}"
     
-    def get_recipe_urls(self, search_results_html: str, count: int = 10) -> List[str]:
+    def get_recipe_urls(self, search_results_html: str) -> List[str]:
         """
         Extract recipe URLs from Serious Eats search results HTML, filtering for jam recipes.
         
@@ -135,7 +135,7 @@ class SeriousEatsAdapter(BaseAdapter):
                 print(f"Found jam recipe: {title[:50]}... -> {url}")
                 
                 # Stop when we have enough jam recipes (collect more to account for rejections)
-                if len(jam_recipe_urls) >= count * 3:  # Collect 3x more to account for rejections
+                if len(jam_recipe_urls) >= 30:  # Collect 30 URLs to account for rejections
                     break
         
         return jam_recipe_urls
@@ -228,7 +228,6 @@ class SeriousEatsAdapter(BaseAdapter):
         servings = self._extract_servings(soup)
         
         # Extract time information
-        time_info = self._extract_time_info(soup)
         
         # Extract description
         description = self._extract_description(soup)
@@ -238,7 +237,6 @@ class SeriousEatsAdapter(BaseAdapter):
             "ingredients": ingredients,
             "instructions": instructions,
             "servings": servings,
-            "time_info": time_info,
             "rating": rating,
             "review_count": review_count,
             "source": self.get_site_name(),
@@ -500,33 +498,6 @@ class SeriousEatsAdapter(BaseAdapter):
         
         return ""
     
-    def _extract_time_info(self, soup) -> Dict[str, str]:
-        """Extract time information (prep, cook, total) from HTML."""
-        time_info = {}
-        
-        # Look for time-related elements - Serious Eats specific
-        time_selectors = [
-            '.recipe-time',
-            '.cooking-time',
-            '.prep-time',
-            '.total-time',
-            '.recipe-meta .time'
-        ]
-        
-        for selector in time_selectors:
-            time_elem = soup.select_one(selector)
-            if time_elem:
-                time_text = time_elem.get_text(strip=True)
-                if time_text:
-                    # Try to parse different time types
-                    if 'prep' in time_text.lower():
-                        time_info['prep_time'] = time_text
-                    elif 'cook' in time_text.lower():
-                        time_info['cook_time'] = time_text
-                    elif 'total' in time_text.lower():
-                        time_info['total_time'] = time_text
-        
-        return time_info
     
     def _extract_description(self, soup) -> str:
         """Extract recipe description from HTML."""
@@ -584,7 +555,7 @@ class SeriousEatsAdapter(BaseAdapter):
     
     def _is_jam_recipe(self, recipe_data: Dict[str, Any]) -> bool:
         """
-        Validate that a recipe is actually a jam recipe.
+        Validate that a recipe is actually a jam recipe using shared logic.
         
         Args:
             recipe_data: Dictionary containing recipe data
@@ -592,43 +563,5 @@ class SeriousEatsAdapter(BaseAdapter):
         Returns:
             bool: True if this is a jam recipe, False otherwise
         """
-        title = recipe_data.get("title", "").lower()
-        description = recipe_data.get("description", "").lower()
-        ingredients = recipe_data.get("ingredients", [])
-        
-        # Check if title contains jam-related keywords
-        jam_keywords = ["jam", "jelly", "preserve", "marmalade", "conserve"]
-        title_has_jam = any(keyword in title for keyword in jam_keywords)
-        
-        # Check if description contains jam-related keywords
-        description_has_jam = any(keyword in description for keyword in jam_keywords)
-        
-        # Check ingredients for jam-making ingredients
-        jam_ingredients = ["sugar", "pectin", "lemon juice", "lime juice", "citric acid"]
-        has_jam_ingredients = False
-        
-        for ingredient in ingredients:
-            ingredient_name = ingredient.get("name", "").lower()
-            if any(jam_ing in ingredient_name for jam_ing in jam_ingredients):
-                has_jam_ingredients = True
-                break
-        
-        # Check for non-jam indicators (baking, cooking, frozen treats, etc.)
-        non_jam_keywords = [
-            "cake", "cupcake", "muffin", "bread", "cookie", "pie", "tart",
-            "scuffin", "roll", "egg roll", "fried", "baked", "oven",
-            "flour", "baking powder", "baking soda", "yeast", "dough",
-            "popsicle", "popsicles", "ice cream", "sorbet", "sherbet",
-            "frozen", "freeze", "chilled", "cold", "ice", "smoothie",
-            "drink", "beverage", "cocktail", "mocktail", "juice"
-        ]
-        
-        has_non_jam_indicators = any(keyword in title for keyword in non_jam_keywords)
-        
-        # Recipe is a jam if:
-        # 1. Title or description contains jam keywords, AND
-        # 2. Has jam-making ingredients, AND
-        # 3. Doesn't have non-jam indicators
-        is_jam = (title_has_jam or description_has_jam) and has_jam_ingredients and not has_non_jam_indicators
-        
-        return is_jam
+        from scraper.core.recipe_validator import is_jam_recipe
+        return is_jam_recipe(recipe_data)
