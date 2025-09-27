@@ -70,6 +70,7 @@ def restore_from_dump():
             if (clean_statement.startswith('CREATE ') or 
                 clean_statement.startswith('ALTER ') or
                 clean_statement.startswith('INSERT ')):
+                print(f"   Executing: {clean_statement[:50]}...")
                 cursor.execute(clean_statement)
                 executed_count += 1
                 if executed_count % 20 == 0:
