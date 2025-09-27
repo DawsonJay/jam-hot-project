@@ -125,6 +125,9 @@ def create_simple_dump():
                             # JSON data
                             json_str = json.dumps(value).replace("'", "''")
                             formatted_values.append(f"'{json_str}'")
+                        elif hasattr(value, 'isoformat'):  # datetime objects
+                            # Format datetime as SQL timestamp
+                            formatted_values.append(f"'{value.isoformat()}'")
                         else:
                             formatted_values.append(str(value))
                     
