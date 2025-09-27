@@ -235,6 +235,26 @@ async def get_fruit_profiles() -> List[Dict[str, Any]]:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch fruit profiles: {str(e)}")
 
+@app.post("/admin/restore-database", summary="Restore Database from Dump")
+async def restore_database():
+    """Manually restore database from dump file."""
+    import subprocess
+    import sys
+    
+    try:
+        result = subprocess.run([sys.executable, "restore_from_dump.py"], 
+                                capture_output=True, text=True, check=True)
+        return {
+            "status": "success", 
+            "message": "Database restored successfully",
+            "output": result.stdout
+        }
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Database restoration failed: {e.stderr}"
+        )
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
