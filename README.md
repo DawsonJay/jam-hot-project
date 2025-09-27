@@ -21,16 +21,22 @@ Upload a photo of fruit → Get fruit identification + jam recipes + flavor prof
 - `GET /recipes` - Get all recipes with full data
 - `GET /recipes/count` - Get recipe statistics
 - `GET /fruits` - Get all fruit profiles
-- `POST /admin/restore-database?api_key=jam-hot-admin-2025` - Manually restore database from dump (requires API key)
+- `POST /admin/restore-database?api_key=<API_KEY>` - Manually restore database from dump (requires API key)
 
-## Quick Start
+## Environment Variables
 
-**1. Set up environment variables:**
+**For Railway Deployment:**
+- `DATABASE_URL` - Automatically provided by Railway
+- `ADMIN_API_KEY` - API key for admin endpoints (default: `jam-hot-admin-2025`)
+
+**For Local Development:**
 ```bash
 # Copy the example file and update with your values
 cp .env.example .env
 # Edit .env with your database credentials
 ```
+
+## Quick Start
 
 **2. Start the database:**
 ```bash
