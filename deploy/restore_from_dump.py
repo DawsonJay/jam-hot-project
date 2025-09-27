@@ -47,9 +47,65 @@ def restore_from_dump():
         with open('db-dump.sql', 'r') as f:
             dump_content = f.read()
         
-        # Execute the entire dump
-        print("📊 Executing dump file...")
-        cursor.execute(dump_content)
+        # Parse and execute SQL statements and COPY data
+        print("📊 Parsing and executing dump file...")
+        
+        lines = dump_content.split('\n')
+        i = 0
+        
+        while i < len(lines):
+            line = lines[i].strip()
+            
+            # Skip psql meta-commands and comments
+            if (line.startswith('\\') or 
+                line.startswith('--') or 
+                line.startswith('SET ') or
+                line.startswith('SELECT pg_catalog') or
+                line == ''):
+                i += 1
+                continue
+            
+            # Handle COPY statements (these contain the actual data!)
+            if line.startswith('COPY '):
+                print(f"   Processing COPY statement...")
+                # Execute the COPY statement
+                cursor.execute(line)
+                
+                # Read data lines until we hit a period
+                i += 1
+                data_lines = []
+                while i < len(lines) and lines[i].strip() != '\\.':
+                    data_lines.append(lines[i])
+                    i += 1
+                
+                # Insert data using INSERT statements instead of COPY
+                if data_lines:
+                    # Parse the COPY statement to get table and columns
+                    copy_parts = line.split('(')
+                    table_part = copy_parts[0].replace('COPY ', '').strip()
+                    columns_part = copy_parts[1].replace(')', '').strip()
+                    columns = [col.strip() for col in columns_part.split(',')]
+                    
+                    # Convert COPY data to INSERT statements
+                    for data_line in data_lines:
+                        if data_line.strip():
+                            values = data_line.split('\t')
+                            if len(values) == len(columns):
+                                placeholders = ', '.join(['%s'] * len(values))
+                                insert_sql = f"INSERT INTO {table_part} ({columns_part}) VALUES ({placeholders})"
+                                cursor.execute(insert_sql, values)
+                
+                i += 1
+                continue
+                
+            # Handle regular SQL statements
+            if line.endswith(';'):
+                print(f"   Executing SQL statement...")
+                cursor.execute(line)
+            
+            i += 1
+        
+        print("✅ Dump file processed successfully")
         conn.commit()
         
         # Verify the restore
