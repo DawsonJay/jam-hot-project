@@ -39,10 +39,12 @@ def restore_from_dump():
         cursor.execute("DROP TABLE IF EXISTS recipes CASCADE")
         cursor.execute("DROP TABLE IF EXISTS profiles CASCADE")
         cursor.execute("DROP TABLE IF EXISTS fruits CASCADE")
+        cursor.execute("DROP VIEW IF EXISTS fruit_coverage CASCADE")
+        cursor.execute("DROP VIEW IF EXISTS recipe_summary CASCADE")
         cursor.execute("DROP SEQUENCE IF EXISTS fruits_id_seq CASCADE")
         cursor.execute("DROP SEQUENCE IF EXISTS recipes_id_seq CASCADE")
         conn.commit()
-        print("✅ Existing tables and sequences cleared")
+        print("✅ Existing tables, views, and sequences cleared")
         
         # Read the dump file
         print("📖 Reading dump file...")
