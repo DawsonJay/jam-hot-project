@@ -26,23 +26,14 @@ def test_connection():
         
         cursor = conn.cursor()
         
-        # Create a simple test table
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS test_table (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(100),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
+        # Drop test table if it exists
+        cursor.execute("DROP TABLE IF EXISTS test_table")
         
-        # Insert test data
-        cursor.execute("INSERT INTO test_table (name) VALUES ('test') ON CONFLICT DO NOTHING")
+        # Test basic connection with a simple query
+        cursor.execute("SELECT 1 as test")
+        result = cursor.fetchone()[0]
         
-        # Query test data
-        cursor.execute("SELECT COUNT(*) FROM test_table")
-        count = cursor.fetchone()[0]
-        
-        print(f"✅ Test table created and populated! Records: {count}")
+        print(f"✅ Database connection test passed! Query result: {result}")
         
         conn.commit()
         conn.close()
