@@ -4,12 +4,15 @@
 
 echo "Exporting Jam Hot database data..."
 
+# Load environment variables
+source .env
+
 # Create deploy directory if it doesn't exist
 mkdir -p deploy
 
 # Export complete database
 echo "Creating database dump..."
-PGPASSWORD='Glitter-Nebula-Frost' pg_dump -h localhost -p 5433 -U postgres -d jam_hot > deploy/db-dump.sql
+PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" > deploy/db-dump.sql
 
 echo "✅ Database exported to deploy/ directory"
 echo ""
