@@ -175,8 +175,8 @@ async def get_all_recipes() -> List[Dict[str, Any]]:
             recipe = {
                 "id": row[0],
                 "title": row[1],
-                "ingredients": json.loads(row[2]) if row[2] else [],
-                "instructions": json.loads(row[3]) if row[3] else [],
+                "ingredients": row[2] if row[2] else [],
+                "instructions": row[3] if row[3] else [],
                 "rating": float(row[4]) if row[4] else None,
                 "review_count": row[5],
                 "source": row[6],
@@ -221,8 +221,8 @@ async def get_fruit_profiles() -> List[Dict[str, Any]]:
                 "scientific_name": row[2],
                 "description": row[3],
                 "season": row[4],
-                "nutritional_data": json.loads(row[5]) if row[5] else {},
-                "jam_making_properties": json.loads(row[6]) if row[6] else {},
+                "nutritional_data": row[5] if row[5] else {},
+                "jam_making_properties": row[6] if row[6] else {},
                 "image_url": row[7],
                 "created_date": row[8].isoformat() if row[8] else None
             }
