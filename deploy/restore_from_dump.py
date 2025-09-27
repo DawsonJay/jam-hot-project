@@ -17,8 +17,8 @@ def get_railway_connection():
 
 def restore_from_dump():
     """Restore database from dump file."""
-    print("🚀 Restoring Database from Dump File")
-    print("=" * 40)
+    print("🚀 Restoring Database from Dump File (Updated)")
+    print("=" * 50)
     
     # Check if dump file exists
     if not os.path.exists('db-dump.sql'):
