@@ -10,6 +10,20 @@ Upload a photo of fruit → Get fruit identification + jam recipes + flavor prof
 
 **Focus**: Fruits only (herbs, spices, and other ingredients are not identified or profiled)
 
+## Current Status
+
+### ✅ Completed Phases
+- **Web Scraping Framework**: 4 site adapters (AllRecipes, Serious Eats, Food Network, BBC Good Food)
+- **Database**: 116 jam recipes + 29 fruit profiles in PostgreSQL
+- **API Backend**: FastAPI deployed on Railway with authentication
+- **Security**: Environment variables, API key authentication
+
+### 🔄 Current Phase: AI Model Development
+- **Target**: Transfer learning for fruit classification
+- **Dataset**: Fruit-360 (60,000+ images, 120+ fruit types)
+- **Goal**: 90%+ accuracy, <2s inference, 50+ fruit types
+- **Timeline**: 4-5 days estimated
+
 ## Deployment
 
 **Live Application**: https://jam-hot-project-production.up.railway.app
