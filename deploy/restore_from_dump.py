@@ -47,71 +47,35 @@ def restore_from_dump():
         with open('db-dump.sql', 'r') as f:
             dump_content = f.read()
         
-        # Parse and execute SQL statements and COPY data
-        print("📊 Parsing and executing dump file...")
+        # Execute SQL statements (CREATE TABLE and INSERT)
+        print("📊 Executing SQL statements...")
         
-        lines = dump_content.split('\n')
-        i = 0
+        # Split into individual statements
+        statements = [stmt.strip() for stmt in dump_content.split(';') if stmt.strip()]
         
-        while i < len(lines):
-            line = lines[i].strip()
+        executed_count = 0
+        for statement in statements:
+            # Clean up the statement (remove extra whitespace and newlines)
+            clean_statement = ' '.join(statement.split())
             
-            # Skip psql meta-commands and comments
-            if (line.startswith('\\') or 
-                line.startswith('--') or 
-                line.startswith('SET ') or
-                line.startswith('SELECT pg_catalog') or
-                line == ''):
-                i += 1
+            # Skip comments, SET statements, and psql meta-commands
+            if (clean_statement.startswith('--') or 
+                clean_statement.startswith('SET ') or
+                clean_statement.startswith('SELECT pg_catalog') or
+                clean_statement.startswith('\\') or
+                not clean_statement):
                 continue
-            
-            # Handle COPY statements (these contain the actual data!)
-            if line.startswith('COPY '):
-                print(f"   Processing COPY statement...")
-                # Execute the COPY statement
-                cursor.execute(line)
                 
-                # Read data lines until we hit a period
-                i += 1
-                data_lines = []
-                while i < len(lines) and lines[i].strip() != '\\.':
-                    data_lines.append(lines[i])
-                    i += 1
-                
-                # Insert data using INSERT statements instead of COPY
-                if data_lines:
-                    # Parse the COPY statement to get table and columns
-                    copy_parts = line.split('(')
-                    table_part = copy_parts[0].replace('COPY ', '').strip()
-                    columns_part = copy_parts[1].replace(')', '').strip()
-                    columns = [col.strip() for col in columns_part.split(',')]
+            # Execute SQL statements (CREATE, ALTER, INSERT)
+            if (clean_statement.startswith('CREATE ') or 
+                clean_statement.startswith('ALTER ') or
+                clean_statement.startswith('INSERT ')):
+                cursor.execute(clean_statement)
+                executed_count += 1
+                if executed_count % 20 == 0:
+                    print(f"   Executed {executed_count} statements...")
                     
-                    # Convert COPY data to INSERT statements
-                    for data_line in data_lines:
-                        if data_line.strip():
-                            values = data_line.split('\t')
-                            if len(values) == len(columns):
-                                placeholders = ', '.join(['%s'] * len(values))
-                                insert_sql = f"INSERT INTO {table_part} ({columns_part}) VALUES ({placeholders})"
-                                cursor.execute(insert_sql, values)
-                
-                i += 1
-                continue
-                
-            # Handle regular SQL statements (only CREATE, ALTER, DROP, etc.)
-            if (line.endswith(';') and 
-                (line.startswith('CREATE ') or 
-                 line.startswith('ALTER ') or 
-                 line.startswith('DROP ') or
-                 line.startswith('INSERT ') or
-                 line.startswith('UPDATE ') or
-                 line.startswith('DELETE '))):
-                print(f"   Executing SQL statement...")
-                cursor.execute(line)
-            
-            i += 1
-        
-        print("✅ Dump file processed successfully")
+        print(f"✅ Executed {executed_count} SQL statements successfully")
         conn.commit()
         
         # Verify the restore
