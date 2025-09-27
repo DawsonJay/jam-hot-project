@@ -85,6 +85,9 @@ def restore_from_dump():
         
     except Exception as e:
         print(f"❌ Error restoring database: {e}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")
         return False
 
 if __name__ == "__main__":
