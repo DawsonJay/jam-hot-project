@@ -33,18 +33,14 @@ def restore_from_dump():
         conn = get_railway_connection()
         cursor = conn.cursor()
         
-        # Clear existing database
+        # Clear existing database - drop everything in public schema
         print("🧹 Clearing existing database...")
-        cursor.execute("DROP TABLE IF EXISTS recipe_fruits CASCADE")
-        cursor.execute("DROP TABLE IF EXISTS recipes CASCADE")
-        cursor.execute("DROP TABLE IF EXISTS profiles CASCADE")
-        cursor.execute("DROP TABLE IF EXISTS fruits CASCADE")
-        cursor.execute("DROP VIEW IF EXISTS fruit_coverage CASCADE")
-        cursor.execute("DROP VIEW IF EXISTS recipe_summary CASCADE")
-        cursor.execute("DROP SEQUENCE IF EXISTS fruits_id_seq CASCADE")
-        cursor.execute("DROP SEQUENCE IF EXISTS recipes_id_seq CASCADE")
+        cursor.execute("DROP SCHEMA public CASCADE")
+        cursor.execute("CREATE SCHEMA public")
+        cursor.execute("GRANT ALL ON SCHEMA public TO postgres")
+        cursor.execute("GRANT ALL ON SCHEMA public TO public")
         conn.commit()
-        print("✅ Existing tables, views, and sequences cleared")
+        print("✅ Database completely cleared and recreated")
         
         # Read the dump file
         print("📖 Reading dump file...")
