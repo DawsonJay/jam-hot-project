@@ -47,13 +47,17 @@ def restore_from_dump():
         with open('db-dump.sql', 'r') as f:
             dump_content = f.read()
         
-        # Execute SQL statements (already properly ordered by export script)
+        # Execute SQL statements in proper order
         print("📊 Executing SQL statements...")
         
         # Split into individual statements
         statements = [stmt.strip() for stmt in dump_content.split(';') if stmt.strip()]
         
-        executed_count = 0
+        # Collect statements by type for proper ordering
+        create_statements = []
+        alter_statements = []
+        insert_statements = []
+        
         for statement in statements:
             # Clean up the statement (remove extra whitespace and newlines)
             clean_statement = ' '.join(statement.split())
@@ -66,14 +70,36 @@ def restore_from_dump():
                 not clean_statement):
                 continue
                 
-            # Execute SQL statements (CREATE, ALTER, INSERT in proper order)
-            if (clean_statement.startswith('CREATE ') or 
-                clean_statement.startswith('ALTER ') or
-                clean_statement.startswith('INSERT ')):
-                cursor.execute(clean_statement)
-                executed_count += 1
-                if executed_count % 20 == 0:
-                    print(f"   Executed {executed_count} statements...")
+            # Collect statements by type
+            if clean_statement.startswith('CREATE '):
+                create_statements.append(clean_statement)
+            elif clean_statement.startswith('ALTER '):
+                alter_statements.append(clean_statement)
+            elif clean_statement.startswith('INSERT '):
+                insert_statements.append(clean_statement)
+        
+        # Execute statements in proper order: CREATE first, then ALTER, then INSERT
+        executed_count = 0
+        
+        # Execute CREATE statements first
+        print(f"   Executing {len(create_statements)} CREATE statements...")
+        for statement in create_statements:
+            cursor.execute(statement)
+            executed_count += 1
+        
+        # Execute ALTER statements second
+        print(f"   Executing {len(alter_statements)} ALTER statements...")
+        for statement in alter_statements:
+            cursor.execute(statement)
+            executed_count += 1
+        
+        # Execute INSERT statements last
+        print(f"   Executing {len(insert_statements)} INSERT statements...")
+        for statement in insert_statements:
+            cursor.execute(statement)
+            executed_count += 1
+            if executed_count % 20 == 0:
+                print(f"   Executed {executed_count} statements...")
                     
         print(f"✅ Executed {executed_count} SQL statements successfully")
         conn.commit()

@@ -10,13 +10,12 @@ source .env
 # Create deploy directory if it doesn't exist
 mkdir -p deploy
 
-# Export database as INSERT statements with proper ordering
-echo "Creating database dump with INSERT statements..."
+# Export database with simple CREATE TABLE and INSERT statements
+echo "Creating simple database dump..."
 
-# Use pg_dump with --inserts and --column-inserts for clean INSERT statements
-# This should create a properly ordered dump file
-echo "Exporting complete database..."
-PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" --inserts --column-inserts > deploy/db-dump.sql
+# Use our custom Python script to create a clean dump
+echo "Exporting with simple script..."
+python3 scripts/database/create_simple_dump.py
 
 echo "✅ Database exported to deploy/ directory"
 echo ""
