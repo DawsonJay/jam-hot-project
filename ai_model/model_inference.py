@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 class FruitClassifier:
-    def __init__(self, model_path="trained_model/best_model.h5"):
+    def __init__(self, model_path="trained_model/improved_model.h5"):
         """Initialize the fruit classifier"""
         print("🍓 Loading Jam Hot AI Model...")
         

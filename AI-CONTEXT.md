@@ -60,6 +60,7 @@ When you first start working on this project, please follow these steps in order
 - Follow portfolio-profile project structure when creating files
 - Ask about capture system after important moments
 - Always include chat context when creating records
+- **CRITICAL: NEVER commit or push to git without explicit user permission**
 
 ## CRITICAL: Fruit Profile Creation Rules
 **⚠️ MANDATORY: When creating or updating fruit profiles, you MUST follow the [Fruit Profile Creation Specification](docs/fruit-profile-creation-specification.md) exactly.**
