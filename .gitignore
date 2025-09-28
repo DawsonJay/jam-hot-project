@@ -33,3 +33,7 @@ Thumbs.db
 .env
 .env.local
 .env.production
+# AI Model files (too large for GitHub)
+ai_model/trained_model/*.h5
+ai_model/ai_env/
+ai_model/data/
