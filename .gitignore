@@ -37,3 +37,6 @@ Thumbs.db
 ai_model/trained_model/*.h5
 ai_model/ai_env/
 ai_model/data/
+# AI Model files (too large for GitHub - store in cloud storage)
+ai_model/trained_model/*.h5
+ai_model/trained_model/*.h5.gz

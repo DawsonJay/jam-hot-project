@@ -64,6 +64,27 @@ ai_model/
 - **Optimization**: CPU-optimized training and inference
 - **Integration**: FastAPI backend with PostgreSQL database
 
+## Getting the Trained Model
+
+The trained model files are too large for GitHub (>96MB). To get the trained model:
+
+1. **Train the model locally** (recommended):
+   ```bash
+   cd ai_model
+   python3 data_collection.py  # Download and filter dataset
+   python3 model_training.py  # Train the model
+   ```
+
+2. **Download from cloud storage** (if available):
+   - The trained model will be stored in cloud storage
+   - Download link will be provided in the main project README
+
+## Model Performance
+- **Validation Accuracy**: 86.1%
+- **Top-3 Accuracy**: 97.5%
+- **Model Size**: ~97MB (compressed: ~93MB)
+- **Classes**: 22 fruit types
+
 ## Next Steps
 1. Set up development environment
 2. Download and prepare Fruit-360 dataset
