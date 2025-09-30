@@ -1,93 +1,118 @@
 # AI Model Development - Jam Hot Project
 
 ## Overview
-This directory contains the AI model development for fruit classification using transfer learning. The model will identify fruits from photos and provide flavor profiles for jam making.
+This directory contains the AI model development for the Jam Hot project - an AI-powered fruit classification system for jam making.
+
+## Current Status
+**🔄 PIVOTING TO GOOGLE IMAGES-BASED TRAINING**
+
+The previous AI model training using the Fruit-360 dataset failed completely on real-world images (0% accuracy despite 83.4% validation accuracy). We're now implementing a Google Images-based scraping strategy for realistic training data.
+
+### Why the Previous Approach Failed:
+- **Dataset Mismatch**: Fruit-360 images are clean, isolated fruits on white backgrounds
+- **Real-World Gap**: User photos are complex scenes with natural lighting and mixed objects
+- **Overconfidence Problem**: Model gave 71-100% confidence on completely wrong predictions
+- **Domain Gap**: No transfer learning between artificial and real-world images
+
+## New Google Images-Based Strategy
+
+### Why Google Images is Perfect:
+- **Real User Photos**: Matches expected app usage patterns
+- **Varied Quality**: Phone photos, different lighting, natural scenes
+- **Huge Volume**: Thousands of fruit photos available
+- **No Licensing Issues**: Training use only, no deployment concerns
+
+### New Training Workflow:
+1. **Google Images Scraping**: Collect realistic fruit photos using web scraper
+2. **Manual Vetting**: Download images locally for quality review
+3. **Dataset Curation**: Ensure balance across 29 target fruit types
+4. **Model Retraining**: Use curated realistic dataset
+
+## Target Fruit Types (29 Most Common for Jam)
+- Strawberry, Apple, Raspberry, Blueberry, Peach, Plum, Cherry, Grape, Orange, Lemon, Lime
+- Fig, Apricot, Mango, Pear, Blackberry, Cranberry, Currant, Elderberry, Gooseberry, Grapefruit
+- Kiwi, Nectarine, Papaya, Passion Fruit, Pineapple, Quince, Rhubarb, Dragon Fruit
 
 ## Project Structure
 ```
 ai_model/
-├── README.md                 # This file
-├── data/                     # Dataset storage
-│   ├── fruit_360/           # Fruit-360 dataset (60,000+ images)
-│   └── custom_photos/       # Personal fruit photos for testing
-├── trained_model/           # Saved model files
-│   ├── model.h5            # Trained model weights
-│   ├── model.json           # Model architecture
-│   └── class_labels.json    # Fruit class labels
-├── notebooks/               # Jupyter notebooks for development
-│   ├── data_exploration.ipynb
-│   ├── model_training.ipynb
-│   └── model_evaluation.ipynb
-├── data_collection.py       # Dataset download and preparation
-├── model_training.py        # Transfer learning training pipeline
-├── model_inference.py       # Model inference and prediction
-└── requirements.txt         # Python dependencies for AI development
+├── README.md                    # This file
+├── ai_env/                      # Virtual environment (reusable)
+├── train_fruit_classifier.py   # Training script
+└── trained_model/              # Model outputs
+    ├── final_model.h5
+    ├── class_indices.json
+    └── training_history.png
+
+scraper/images/
+├── adapters/                    # Image source adapters
+│   └── google_images_adapter.py
+├── core/                        # Core scraping logic
+│   └── image_scraper.py
+├── scripts/                     # Download scripts
+│   └── download_training_images.py
+└── data/                        # Image storage (organized by fruit)
+    ├── strawberry/
+    ├── apple/
+    └── ... (29 fruit types + unknown)
 ```
 
-## Development Plan
-
-### Phase 1: Environment Setup (Day 1)
-- [ ] Install AI/ML dependencies (TensorFlow, OpenCV, etc.)
-- [ ] Download Fruit-360 dataset
-- [ ] Set up data preprocessing pipeline
-- [ ] Configure base model (ResNet50/EfficientNet)
-
-### Phase 2: Model Training (Days 2-3)
-- [ ] Implement transfer learning pipeline
-- [ ] Train model on fruit classification
-- [ ] Data augmentation and optimization
-- [ ] Monitor training performance
-
-### Phase 3: Validation & Integration (Days 4-5)
-- [ ] Model validation and testing
-- [ ] Performance optimization
-- [ ] API integration with FastAPI backend
-- [ ] Real-world testing with custom photos
-
-## Success Criteria
-- **Model accuracy**: 90%+ fruit identification accuracy
-- **Inference speed**: <2 seconds per image
-- **Model size**: <100MB for deployment
-- **Fruit coverage**: 50+ common fruit types
-- **Real-world testing**: Works with personal photos
-
-## Hardware Specifications
-- **CPU**: AMD Ryzen 5 7430U (6 cores, 12 threads)
-- **RAM**: 30GB (excellent for dataset handling)
-- **Training**: CPU-based (no GPU required)
-- **Storage**: ~2GB for dataset and model files
-
 ## Technical Approach
-- **Transfer Learning**: Pre-trained model (ResNet50/EfficientNet)
-- **Dataset**: Fruit-360 (60,000+ images, 120+ fruit types)
-- **Framework**: TensorFlow/Keras
-- **Optimization**: CPU-optimized training and inference
-- **Integration**: FastAPI backend with PostgreSQL database
 
-## Getting the Trained Model
+### Data Collection Strategy:
+- **Target**: 500+ images per fruit type (7,500+ total)
+- **Quality Control**: Manual vetting of all downloaded images
+- **Balancing**: Ensure similar counts across fruit types
+- **Realism**: Focus on natural, user-submitted photos
 
-The trained model files are too large for GitHub (>96MB). To get the trained model:
+### Model Architecture:
+- **Base Model**: ResNet50 (proven architecture)
+- **Input Size**: 224x224 RGB images
+- **Output**: 15 fruit classes
+- **Transfer Learning**: Fine-tune on realistic data
+- **Regularization**: Dropout, early stopping, data augmentation
 
-1. **Train the model locally** (recommended):
-   ```bash
-   cd ai_model
-   python3 data_collection.py  # Download and filter dataset
-   python3 model_training.py  # Train the model
-   ```
+### Performance Targets:
+- **Real-World Accuracy**: >80% on user photos
+- **Inference Speed**: <2 seconds per image
+- **Confidence Calibration**: Accurate confidence scores
+- **Robustness**: Handle varied lighting and composition
 
-2. **Download from cloud storage** (if available):
-   - The trained model will be stored in cloud storage
-   - Download link will be provided in the main project README
+## Implementation Plan
 
-## Model Performance
-- **Validation Accuracy**: 86.1%
-- **Top-3 Accuracy**: 97.5%
-- **Model Size**: ~97MB (compressed: ~93MB)
-- **Classes**: 22 fruit types
+### Phase 1: Pinterest Scraper (1 day)
+- Build Pinterest image collection adapter
+- Implement URL extraction and validation
+- Test with 1-2 fruit types
+
+### Phase 2: Mass Data Collection (1-2 days)
+- Scrape 500+ images for 15 target fruits
+- Download and organize into local folders
+- Manual vetting and dataset balancing
+
+### Phase 3: Model Retraining (1-2 days)
+- Train ResNet50 on curated Pinterest dataset
+- Validate on real user photos
+- Achieve >80% accuracy on realistic images
+
+**Total Timeline**: 4-5 days for working model
+
+## Portfolio Value
+
+This pivot demonstrates valuable professional skills:
+- **Problem Diagnosis**: Systematic analysis of AI training failures
+- **Adaptability**: Pivoting strategy when initial approach fails
+- **Data Engineering**: Designing custom data collection pipeline
+- **Quality Focus**: Manual vetting process for training data
+- **ML Understanding**: Recognizing domain gap and dataset mismatch
 
 ## Next Steps
-1. Set up development environment
-2. Download and prepare Fruit-360 dataset
-3. Implement transfer learning pipeline
-4. Train and validate model
-5. Integrate with existing API backend
+1. Build Pinterest image scraper
+2. Collect and vet realistic training data
+3. Retrain model on curated dataset
+4. Validate on real-world photos
+5. Deploy working AI model
+
+---
+
+*This README was updated on 2025-09-29-0757 to reflect the pivot to Pinterest-based training approach.*
