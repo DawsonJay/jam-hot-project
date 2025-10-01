@@ -2,12 +2,12 @@
 Base Image Adapter Interface
 
 This module defines the base interface that all image source adapters must implement.
-The core image scraper uses this interface to work with any image source without knowing
+The image scraper uses this interface to work with any image source without knowing
 the specific implementation details.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List
 
 
 class BaseImageAdapter(ABC):
@@ -15,7 +15,7 @@ class BaseImageAdapter(ABC):
     Abstract base class for all image source adapters.
     
     This defines the interface that all site-specific image adapters must implement.
-    The core image scraper uses this interface to work with any image source.
+    The image scraper uses this interface to work with any image source.
     """
     
     @abstractmethod
@@ -24,18 +24,20 @@ class BaseImageAdapter(ABC):
         Return the name of this image source.
         
         Returns:
-            str: The name of the source (e.g., "Google Images", "Flickr")
+            str: The name of the source (e.g., "Flickr", "Reddit", "Unsplash")
         """
         pass
     
     @abstractmethod
-    def search_for_fruit(self, fruit_name: str, max_images: int = 100) -> str:
+    def create_search_url(self, search_term: str) -> str:
         """
-        Generate a search URL for finding images of this fruit.
+        Create a search URL for a specific search term.
+        
+        This method is used by the scraper to create URLs for each search term.
+        Each adapter can customize how search terms are converted to URLs.
         
         Args:
-            fruit_name (str): The name of the fruit to search for
-            max_images (int): Maximum number of images to retrieve
+            search_term (str): The specific term to search for
             
         Returns:
             str: The search URL for this source
@@ -56,47 +58,43 @@ class BaseImageAdapter(ABC):
         """
         pass
     
-    @abstractmethod
-    def download_image(self, image_url: str, save_path: str) -> Dict[str, Any]:
+    def get_fruit_search_terms(self, fruit_name: str) -> List[str]:
         """
-        Download an image from the given URL and save it to the specified path.
+        Generate search term variations for a specific fruit, optimized for jam making.
         
-        Args:
-            image_url (str): The URL of the image to download
-            save_path (str): The local path where the image should be saved
-            
-        Returns:
-            Dict[str, Any]: Dictionary containing download results
-                - success (bool): Whether the download was successful
-                - url (str): The original image URL
-                - path (str): The local save path
-                - size (int): File size in bytes (if successful)
-                - error (str): Error message (if failed)
-        """
-        pass
-    
-    def get_scraping_method(self) -> str:
-        """
-        Return the scraping method this adapter needs.
-        
-        Returns:
-            str: The scraping method ("requests" for static HTML, "selenium" for JavaScript-rendered content)
-        """
-        return "requests"  # Default to fast method
-    
-    def get_search_terms(self, fruit_name: str) -> List[str]:
-        """
-        Generate search term variations for better image diversity.
+        The scraper will divide the target URL count across all search terms
+        to ensure variety in the collected images.
         
         Args:
             fruit_name (str): The base fruit name
             
         Returns:
-            List[str]: List of search term variations
+            List[str]: List of search term variations for fruits
         """
         return [
-            f"{fruit_name}",
-            f"{fruit_name} fruit",
-            f"fresh {fruit_name}",
-            f"{fruit_name} photo"
+            f"{fruit_name} fruit",           # Main fruit search
+            f"{fruit_name} fresh",           # Fresh produce
+            f"{fruit_name} ripe",            # Ripe fruits (best for jam)
+            f"{fruit_name} organic",         # Organic produce
+            f"{fruit_name} close up",        # Close-up shots
+            f"{fruit_name} natural",        # Natural lighting
+            f"{fruit_name} harvest",         # Harvest time (peak ripeness)
+            f"{fruit_name} picking"          # Picking (fresh from source)
+        ]
+    
+    def get_not_fruit_search_terms(self) -> List[str]:
+        """
+        Generate search terms for non-fruit images to create a balanced dataset.
+        
+        Returns:
+            List[str]: List of search terms for not-fruit images
+        """
+        return [
+            "hands holding",                 # Hands (common in fruit photos)
+            "kitchen utensils",              # Kitchen tools
+            "cooking tools",                 # Cooking equipment
+            "cutting board",                 # Cutting boards
+            "spoon fork knife",              # Utensils
+            "kitchen counter",               # Kitchen surfaces
+            "cooking ingredients"            # General cooking items
         ]

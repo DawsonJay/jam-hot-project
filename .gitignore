@@ -40,3 +40,17 @@ ai_model/data/
 # AI Model files (too large for GitHub - store in cloud storage)
 ai_model/trained_model/*.h5
 ai_model/trained_model/*.h5.gz
+
+# Image files (collected data - too large for GitHub)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+*.svg
+images/
+scraper/images/data/
+scraper/images/downloads/
+scraper/images/collected/
