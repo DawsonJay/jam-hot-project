@@ -1,3 +1,0 @@
-# Jam Hot Scraper Package
-
-

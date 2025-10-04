@@ -22,10 +22,8 @@ When you first start working on this project, please follow these steps in order
 ### 4. Read Chat Records for Context
 - **Directory**: `/home/james/Documents/portfolio-profile/records/jam-hot/`
 - **Purpose**: Understand previous work, decisions made, and current project state
-- **Files to read** (in chronological order):
-  - `chat-record-2025-09-21-1857.md`
-  - `chat-record-2025-09-21-1904.md`
-  - (any additional records created after this file)
+- **Files to read**: **Read the most recent 5-10 chat records** to get current project state
+- **Note**: The project has evolved significantly since the initial records - always check for the most recent records first
 
 ### 5. Read Technical Specifications
 - **Directory**: `docs/` (in this project)
@@ -45,13 +43,15 @@ When you first start working on this project, please follow these steps in order
 - **Purpose**: Understand the capture system and documentation approach
 
 ## Project Status
-- **Current Phase**: AI Model Development
-- **Last Updated**: 2025-09-27-1640
+- **Current Phase**: **ABANDONED** - Project Terminated
+- **Last Updated**: 2025-10-04-1340
 - **Completed Phases**: 
   - ✅ Web Scraping Framework (4 site adapters, 116 recipes, 29 fruit profiles)
   - ✅ Database & API Deployment (PostgreSQL + FastAPI on Railway)
   - ✅ Security Implementation (Environment variables, API authentication)
-- **Next Steps**: AI Model Development - Transfer learning for fruit classification
+- ❌ **ABANDONED**: Advanced Image Collection Pipeline (too complex, poor data quality)
+- **Reason**: Data collection pipeline became over-engineered with 0% success rate
+- **Next Steps**: Use existing datasets (ImageNet, COCO) for AI model development
 
 ## Key Behaviors to Remember
 - Always use GMT/UTC timezone for timestamps (format: YYYY-MM-DD-HHMM)
@@ -61,6 +61,7 @@ When you first start working on this project, please follow these steps in order
 - Ask about capture system after important moments
 - Always include chat context when creating records
 - **CRITICAL: NEVER commit or push to git without explicit user permission**
+- **IMPORTANT: This project has been ABANDONED - read chat-record-2025-10-04-1340.md for details**
 
 ## CRITICAL: Fruit Profile Creation Rules
 **⚠️ MANDATORY: When creating or updating fruit profiles, you MUST follow the [Fruit Profile Creation Specification](docs/fruit-profile-creation-specification.md) exactly.**
